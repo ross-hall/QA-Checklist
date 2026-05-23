@@ -880,12 +880,13 @@ async function getSpaces(wsId) {
   return d.spaces || [];
 }
 
-// Docs live in Space-level folders. We use a dedicated folder named "RS QA Checklists"
-// and store each checklist as a Doc (page). Since ClickUp Docs API may vary,
-// we use Tasks with a custom description to store JSON — most reliable approach.
+// Storage strategy: task name holds the project name, and we store all checklist
+// JSON in a task COMMENT prefixed with "RS_QA_DATA:" — comments are returned
+// verbatim by ClickUp, unlike the description field which gets sanitised/stripped.
+
+const DATA_PREFIX = 'RS_QA_DATA:';
 
 async function getOrCreateList(spaceId) {
-  // Get or create a list named "RS QA Checklists" in the space (no folder)
   const d = await cuFetch(`/space/${spaceId}/list?archived=false`);
   const lists = d.lists || [];
   const existing = lists.find(l => l.name === 'RS QA Checklists');
@@ -900,41 +901,29 @@ async function getOrCreateList(spaceId) {
 async function getAllChecklists() {
   const listId = await getOrCreateList(cfg.spaceId);
   const d = await cuFetch(`/list/${listId}/task?archived=false&include_closed=true`);
-  return (d.tasks || []).map(parseTask);
+  const tasks = d.tasks || [];
+  // Load each task's data comment in parallel
+  const results = await Promise.all(tasks.map(t => loadTaskData(t)));
+  return results;
 }
 
-async function createTask(name, url, checker) {
-  const listId = await getOrCreateList(cfg.spaceId);
-  const meta = { name, url, checker, created: Date.now() };
-  const checks = {};
-  const task = await cuFetch(`/list/${listId}/task`, {
-    method: 'POST',
-    body: JSON.stringify({
-      name: name,
-      description: JSON.stringify({ meta, checks }),
-      status: 'to do'
-    })
-  });
-  return task;
-}
+async function loadTaskData(task) {
+  // Fetch comments and find our data comment
+  let data = { meta: { name: task.name, url: '', checker: '', created: 0 }, checks: {} };
+  try {
+    const cd = await cuFetch(`/task/${task.id}/comment`);
+    const comments = cd.comments || [];
+    // Find the latest RS_QA_DATA comment (last one wins)
+    const dataComments = comments.filter(c =>
+      (c.comment_text || '').startsWith(DATA_PREFIX)
+    );
+    if (dataComments.length > 0) {
+      const latest = dataComments[dataComments.length - 1];
+      const json = latest.comment_text.slice(DATA_PREFIX.length);
+      data = JSON.parse(json);
+    }
+  } catch(e) { /* use defaults */ }
 
-async function updateTask(taskId, meta, checks) {
-  const passed = countPassed(checks);
-  const failed = countFailed(checks);
-  const pct = Math.round((passed / (TOTAL_ITEMS - countNA(checks))) * 100) || 0;
-  const status = pct === 100 ? 'complete' : failed > 0 ? 'in progress' : 'to do';
-  await cuFetch(`/task/${taskId}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-      description: JSON.stringify({ meta, checks }),
-      status
-    })
-  });
-}
-
-function parseTask(task) {
-  let data = { meta: { name: task.name, url: '', checker: '' }, checks: {} };
-  try { data = JSON.parse(task.description || '{}'); } catch(e) {}
   const checks = data.checks || {};
   const passed = countPassed(checks);
   const failed = countFailed(checks);
@@ -950,6 +939,44 @@ function parseTask(task) {
     passed, failed, na, pct,
     status: task.status?.status || 'to do'
   };
+}
+
+async function createTask(name, url, checker) {
+  const listId = await getOrCreateList(cfg.spaceId);
+  // Create a minimal task — data goes in a comment after creation
+  const task = await cuFetch(`/list/${listId}/task`, {
+    method: 'POST',
+    body: JSON.stringify({ name, status: 'to do' })
+  });
+  // Write initial data comment
+  const meta = { name, url, checker, created: Date.now() };
+  await writeDataComment(task.id, meta, {});
+  return task;
+}
+
+async function updateTask(taskId, meta, checks) {
+  const passed = countPassed(checks);
+  const failed = countFailed(checks);
+  const na = countNA(checks);
+  const pct = Math.round((passed / Math.max(1, TOTAL_ITEMS - na)) * 100) || 0;
+  const status = pct === 100 ? 'complete' : failed > 0 ? 'in progress' : 'to do';
+
+  // Update task status
+  await cuFetch(`/task/${taskId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ status })
+  });
+
+  // Write new data comment (we accumulate comments but always read the last one)
+  await writeDataComment(taskId, meta, checks);
+}
+
+async function writeDataComment(taskId, meta, checks) {
+  const payload = JSON.stringify({ meta, checks });
+  await cuFetch(`/task/${taskId}/comment`, {
+    method: 'POST',
+    body: JSON.stringify({ comment_text: DATA_PREFIX + payload })
+  });
 }
 
 function countPassed(c) { return Object.keys(c).filter(k => !k.startsWith('snote-') && c[k].checked).length; }
@@ -1135,9 +1162,9 @@ async function openChecklist(taskId, meta, checks) {
 
   try {
     if (!meta) {
-      // Load from ClickUp
-      const res = await cuFetch(`/task/${taskId}`);
-      const parsed = parseTask(res);
+      // Load from ClickUp using comment-based storage
+      const task = await cuFetch(`/task/${taskId}`);
+      const parsed = await loadTaskData(task);
       meta = { name: parsed.name, url: parsed.url, checker: parsed.checker, created: parsed.created };
       checks = parsed.checks;
     }
