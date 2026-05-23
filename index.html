@@ -3,772 +3,823 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RS QA — Dashboard</title>
+<title>RS — QA Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
 <style>
+/* ── TOKENS ── */
 :root {
-  --navy: #040e6b;
-  --navy-mid: #0b1c9e;
-  --navy-dim: rgba(4,14,107,0.08);
-  --accent: #e8ff47;
-  --accent-dim: rgba(232,255,71,0.15);
-  --red: #ff3c3c;
-  --red-dim: #fff0f0;
-  --green: #00c472;
-  --green-dim: #e6fff4;
-  --amber: #f59e0b;
-  --amber-dim: #fffbeb;
-  --bg: #f2f1eb;
-  --surface: #ffffff;
-  --surface2: #f8f7f2;
-  --border: #dddbd2;
-  --border-strong: #c5c3b8;
-  --text: #111128;
-  --muted: #888899;
-  --mono: 'DM Mono', monospace;
-  --serif: 'Fraunces', serif;
-  --radius: 8px;
-  --shadow: 0 2px 12px rgba(4,14,107,0.08), 0 1px 3px rgba(4,14,107,0.06);
-  --shadow-lg: 0 8px 32px rgba(4,14,107,0.14), 0 2px 8px rgba(4,14,107,0.08);
+  --navy:       #040e6b;
+  --navy-mid:   #0b1c9e;
+  --navy-glow:  rgba(4,14,107,0.12);
+  --accent:     #e8ff47;
+  --accent-dk:  #c8de00;
+  --red:        #f03a3a;
+  --red-bg:     #fff2f2;
+  --green:      #00c472;
+  --green-bg:   #eafff5;
+  --amber:      #f59e0b;
+  --amber-bg:   #fffbeb;
+  --bg:         #efede6;
+  --bg2:        #e8e6de;
+  --surface:    #fafaf7;
+  --surface2:   #f3f2ec;
+  --border:     #dddad0;
+  --text:       #0f0f22;
+  --muted:      #868696;
+  --mono:       'DM Mono', monospace;
+  --serif:      'Fraunces', serif;
+  --r:          7px;
+  --sh:         0 1px 3px rgba(4,14,107,0.07), 0 4px 16px rgba(4,14,107,0.07);
+  --sh-lg:      0 2px 8px rgba(4,14,107,0.1), 0 12px 40px rgba(4,14,107,0.12);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
 body {
-  background: var(--bg);
-  color: var(--text);
   font-family: var(--mono);
   font-size: 13px;
+  background: var(--bg);
+  color: var(--text);
   min-height: 100vh;
 }
 
-/* ── SIDEBAR ── */
-.layout { display: flex; min-height: 100vh; }
+/* ── LAYOUT ── */
+.app { display:flex; min-height:100vh; }
 
+/* ── SIDEBAR ── */
 .sidebar {
-  width: 240px;
+  width: 220px;
   flex-shrink: 0;
   background: var(--navy);
+  position: fixed;
+  inset: 0 auto 0 0;
   display: flex;
   flex-direction: column;
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
   z-index: 100;
-  transition: transform 0.25s ease;
 }
 
-.sidebar-logo {
-  padding: 24px 20px 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+.sb-logo {
+  padding: 22px 18px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
 }
-.logo-mark {
+.sb-wordmark {
   font-family: var(--serif);
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
-  color: white;
+  color: #fff;
   letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1;
 }
-.logo-mark span { color: var(--accent); }
-.logo-sub {
+.sb-wordmark em { color: var(--accent); font-style: normal; }
+.sb-sub {
   font-size: 10px;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.3);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  margin-top: 4px;
+  margin-top: 5px;
 }
 
-.sidebar-nav {
-  flex: 1;
-  overflow-y: auto;
-  padding: 12px 0;
-}
+.sb-nav { flex:1; padding: 10px 0; overflow-y:auto; }
 
-.nav-label {
+.sb-section-label {
   font-size: 9px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.28);
-  padding: 14px 20px 6px;
+  color: rgba(255,255,255,0.25);
+  padding: 12px 18px 5px;
 }
 
-.nav-item {
+.sb-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 20px;
-  color: rgba(255,255,255,0.55);
-  cursor: pointer;
+  gap: 9px;
+  padding: 8px 18px;
   font-size: 12px;
-  transition: all 0.15s;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
   border-left: 2px solid transparent;
+  transition: all 0.14s;
 }
-.nav-item:hover { color: white; background: rgba(255,255,255,0.06); }
-.nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(232,255,71,0.06); }
-.nav-item .icon { font-size: 14px; width: 18px; text-align: center; flex-shrink: 0; }
+.sb-item:hover { color:#fff; background:rgba(255,255,255,0.05); }
+.sb-item.active { color:var(--accent); border-left-color:var(--accent); background:rgba(232,255,71,0.05); }
+.sb-item .si { font-size:14px; width:18px; text-align:center; flex-shrink:0; }
 
-.sidebar-footer {
-  padding: 14px 20px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-}
-.api-status {
+.sb-foot {
+  padding: 14px 18px;
+  border-top: 1px solid rgba(255,255,255,0.07);
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 11px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.35);
 }
-.api-dot {
+.dot {
   width: 7px; height: 7px;
   border-radius: 50%;
   background: var(--muted);
   flex-shrink: 0;
-  transition: background 0.3s;
+  transition: background 0.3s, box-shadow 0.3s;
 }
-.api-dot.ok { background: var(--green); box-shadow: 0 0 6px var(--green); }
-.api-dot.err { background: var(--red); }
+.dot.ok { background:var(--green); box-shadow: 0 0 7px var(--green); }
 
 /* ── MAIN ── */
-.main {
-  margin-left: 240px;
-  flex: 1;
-  min-width: 0;
-}
+.main { margin-left:220px; flex:1; min-width:0; }
 
 /* ── TOPBAR ── */
 .topbar {
+  height: 54px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 0 32px;
-  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  padding: 0 28px;
+  gap: 14px;
   position: sticky;
   top: 0;
   z-index: 50;
 }
-
 .topbar-title {
   font-family: var(--serif);
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--navy);
 }
-
-.topbar-actions { display: flex; gap: 10px; align-items: center; }
+.topbar-right { display:flex; gap:8px; align-items:center; }
 
 /* ── BUTTONS ── */
 .btn {
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 500;
-  padding: 8px 16px;
-  border-radius: var(--radius);
+  padding: 7px 15px;
+  border-radius: var(--r);
   border: none;
   cursor: pointer;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  transition: all 0.15s;
+  transition: all 0.14s;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  white-space: nowrap;
 }
-.btn-primary { background: var(--navy); color: white; }
-.btn-primary:hover { background: var(--navy-mid); }
-.btn-accent { background: var(--accent); color: var(--navy); }
-.btn-accent:hover { filter: brightness(0.93); }
-.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
-.btn-ghost:hover { border-color: var(--navy); color: var(--navy); }
-.btn-danger { background: transparent; color: var(--red); border: 1px solid #ffd0d0; }
-.btn-danger:hover { background: var(--red-dim); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn:disabled { opacity:0.4; pointer-events:none; }
+.btn-navy  { background:var(--navy); color:#fff; }
+.btn-navy:hover { background:var(--navy-mid); }
+.btn-accent { background:var(--accent); color:var(--navy); font-weight:600; }
+.btn-accent:hover { background:var(--accent-dk); }
+.btn-ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
+.btn-ghost:hover { color:var(--text); border-color:var(--text); }
+.btn-red { background:transparent; color:var(--red); border:1px solid #fcc; }
+.btn-red:hover { background:var(--red-bg); }
 
 /* ── PAGES ── */
-.page { display: none; padding: 32px; }
-.page.active { display: block; }
-
-/* ── SETUP PAGE ── */
-.setup-card {
-  max-width: 520px;
-  margin: 40px auto;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-}
-
-.setup-hero {
-  background: var(--navy);
-  padding: 32px 36px 28px;
-  border-bottom: 3px solid var(--accent);
-}
-.setup-hero h1 {
-  font-family: var(--serif);
-  font-size: 26px;
-  font-weight: 300;
-  color: white;
-  letter-spacing: -0.03em;
-  font-style: italic;
-  line-height: 1.2;
-}
-.setup-hero p { color: rgba(255,255,255,0.5); font-size: 12px; margin-top: 8px; }
-
-.setup-body { padding: 28px 36px 32px; }
-
-.field { margin-bottom: 20px; }
-.field label {
-  display: block;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 8px;
-}
-.field input, .field select {
-  width: 100%;
-  font-family: var(--mono);
-  font-size: 13px;
-  padding: 10px 14px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--text);
-  outline: none;
-  transition: border-color 0.2s;
-}
-.field input:focus, .field select:focus { border-color: var(--navy); }
-.field .hint { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.page { display:none; }
+.page.on { display:block; }
 
 /* ── DASHBOARD ── */
-.dash-header {
+.dash-body { padding:26px 28px 60px; }
+
+.stats-row {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 28px;
-  gap: 16px;
+  gap: 10px;
+  margin-bottom: 26px;
   flex-wrap: wrap;
 }
-
-.dash-stats {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-}
-
-.stat-card {
+.stat {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px 20px;
+  border-radius: var(--r);
+  padding: 14px 18px;
   flex: 1;
-  min-width: 120px;
-  box-shadow: var(--shadow);
+  min-width: 100px;
+  box-shadow: var(--sh);
 }
-.stat-card .stat-val {
+.stat-n {
   font-family: var(--serif);
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 600;
-  color: var(--navy);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.04em;
   line-height: 1;
+  color: var(--navy);
 }
-.stat-card .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.stat-l { font-size: 10px; color:var(--muted); margin-top:4px; letter-spacing:0.03em; }
 
-.checklist-grid {
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(270px,1fr));
+  gap: 12px;
 }
 
-.cl-card {
+/* CARD */
+.card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: var(--r);
+  box-shadow: var(--sh);
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
   position: relative;
 }
-.cl-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); border-color: var(--navy); }
+.card:hover { transform:translateY(-2px); box-shadow:var(--sh-lg); border-color:rgba(4,14,107,0.3); }
 
-.cl-card-stripe {
-  height: 4px;
-  background: var(--border);
-}
-.cl-card-stripe.pct-low { background: var(--red); }
-.cl-card-stripe.pct-mid { background: var(--amber); }
-.cl-card-stripe.pct-high { background: var(--green); }
-.cl-card-stripe.pct-done { background: var(--navy); }
+.card-bar { height:3px; }
+.bar-todo  { background: var(--border); }
+.bar-low   { background: var(--red); }
+.bar-mid   { background: var(--amber); }
+.bar-high  { background: var(--green); }
+.bar-done  { background: var(--navy); }
 
-.cl-card-body { padding: 16px 18px; }
-.cl-card-name {
+.card-body { padding:15px 16px; }
+.card-name {
   font-family: var(--serif);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
   color: var(--text);
 }
-.cl-card-url { font-size: 11px; color: var(--muted); margin-bottom: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-.cl-card-meta { display: flex; justify-content: space-between; align-items: center; }
-.cl-card-pct {
-  font-family: var(--serif);
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
+.card-url {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
-.cl-card-info { font-size: 10px; color: var(--muted); text-align: right; }
+.card-foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.card-pct {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.card-meta { font-size:10px; color:var(--muted); text-align:right; line-height:1.5; }
 
-.cl-card-badges { display: flex; gap: 4px; margin-top: 10px; flex-wrap: wrap; }
-.badge {
+.chips { display:flex; gap:4px; margin-top:9px; flex-wrap:wrap; }
+.chip {
   font-size: 10px;
   padding: 2px 8px;
   border-radius: 100px;
   font-weight: 500;
+  letter-spacing: 0.02em;
 }
-.badge-fail { background: var(--red-dim); color: var(--red); }
-.badge-pass { background: var(--green-dim); color: #007a47; }
-.badge-amber { background: var(--amber-dim); color: #92600a; }
-.badge-navy { background: var(--navy-dim); color: var(--navy); }
+.chip-red   { background:var(--red-bg);   color:var(--red); }
+.chip-green { background:var(--green-bg); color:#007a47; }
+.chip-navy  { background:rgba(4,14,107,0.08); color:var(--navy); }
+.chip-amber { background:var(--amber-bg); color:#8a5c00; }
 
-.empty-state {
+.empty {
+  grid-column: 1/-1;
   text-align: center;
-  padding: 64px 32px;
+  padding: 60px 24px;
   color: var(--muted);
 }
-.empty-state .empty-icon { font-size: 36px; margin-bottom: 16px; }
-.empty-state h3 { font-family: var(--serif); font-size: 20px; color: var(--text); margin-bottom: 8px; font-style: italic; font-weight: 300; }
-.empty-state p { font-size: 12px; max-width: 300px; margin: 0 auto 20px; }
+.empty-icon { font-size:40px; margin-bottom:16px; }
+.empty h3 { font-family:var(--serif); font-size:20px; font-weight:300; font-style:italic; color:var(--text); margin-bottom:8px; }
+.empty p { font-size:12px; max-width:280px; margin:0 auto 20px; line-height:1.6; }
 
 /* ── MODAL ── */
-.modal-overlay {
-  position: fixed; inset: 0;
-  background: rgba(4,14,107,0.35);
-  backdrop-filter: blur(4px);
+.overlay {
+  position: fixed; inset:0;
+  background: rgba(4,14,107,0.3);
+  backdrop-filter: blur(5px);
   z-index: 200;
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 20px;
 }
-.modal-overlay.open { display: flex; }
+.overlay.on { display:flex; }
 
 .modal {
   background: var(--surface);
   border-radius: 12px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--sh-lg);
   width: 100%;
-  max-width: 480px;
+  max-width: 460px;
   overflow: hidden;
-  animation: modalIn 0.2s ease;
+  animation: popIn 0.2s cubic-bezier(0.34,1.56,0.64,1);
 }
-@keyframes modalIn { from { transform: scale(0.96) translateY(8px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes popIn {
+  from { transform:scale(0.94) translateY(10px); opacity:0; }
+  to   { transform:none; opacity:1; }
+}
 
-.modal-header {
+.modal-hd {
   background: var(--navy);
-  padding: 22px 28px;
   border-bottom: 3px solid var(--accent);
+  padding: 22px 26px;
 }
-.modal-header h2 { font-family: var(--serif); font-size: 20px; font-weight: 300; font-style: italic; color: white; letter-spacing: -0.02em; }
-.modal-header p { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; }
-.modal-body { padding: 24px 28px; }
-.modal-footer { padding: 0 28px 24px; display: flex; gap: 10px; justify-content: flex-end; }
+.modal-hd h2 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 300;
+  font-style: italic;
+  color: #fff;
+  letter-spacing: -0.02em;
+}
+.modal-hd p { font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px; }
+.modal-bd { padding:22px 26px; }
+.modal-ft { padding:0 26px 22px; display:flex; gap:8px; justify-content:flex-end; }
+
+.field { margin-bottom:16px; }
+.field label {
+  display:block;
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:7px;
+}
+.field input {
+  width:100%;
+  font-family:var(--mono);
+  font-size:13px;
+  padding:9px 12px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r);
+  background:var(--surface);
+  color:var(--text);
+  outline:none;
+  transition:border-color 0.15s;
+}
+.field input:focus { border-color:var(--navy); }
 
 /* ── CHECKLIST VIEW ── */
 .cl-topbar {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 14px 32px;
+  padding: 12px 28px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
-.cl-topbar-back { cursor: pointer; color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
-.cl-topbar-back:hover { color: var(--navy); }
-
-.cl-topbar-info { flex: 1; }
-.cl-topbar-name { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--navy); letter-spacing: -0.02em; }
-.cl-topbar-url { font-size: 11px; color: var(--muted); }
-
-.progress-wrap { height: 3px; background: var(--border); }
-.progress-fill { height: 100%; background: var(--accent); transition: width 0.4s ease; }
-
-.checklist-page { max-width: 800px; margin: 0 auto; padding: 28px 32px 64px; }
-
-/* SECTIONS */
-.section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-bottom: 12px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-}
-
-.section-hdr {
+.cl-back {
+  font-size: 12px;
+  color: var(--muted);
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
+  gap: 5px;
+  transition: color 0.14s;
+  flex-shrink: 0;
+}
+.cl-back:hover { color:var(--navy); }
+.cl-info { flex:1; min-width:0; }
+.cl-name { font-family:var(--serif); font-size:16px; font-weight:600; letter-spacing:-0.02em; color:var(--navy); }
+.cl-url  { font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+.prog-track { height:3px; background:var(--border); }
+.prog-fill  { height:100%; background:var(--accent); transition:width 0.35s ease; }
+
+.cl-body { max-width:780px; margin:0 auto; padding:24px 28px 72px; }
+
+/* CHECKLIST SECTIONS */
+.sec {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: var(--sh);
+}
+.sec-hd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
   cursor: pointer;
   user-select: none;
-  transition: background 0.1s;
+  transition: background 0.12s;
 }
-.section-hdr:hover { background: var(--surface2); }
-.section.open .section-hdr { border-bottom: 1px solid var(--border); }
-
-.section-icon { font-size: 15px; flex-shrink: 0; width: 22px; text-align: center; }
-.section-title { font-family: var(--serif); font-size: 14px; font-weight: 600; flex: 1; letter-spacing: -0.01em; }
-.section-cnt { font-size: 11px; color: var(--muted); }
-.section-chev { color: var(--muted); font-size: 9px; transition: transform 0.2s; }
-.section.open .section-chev { transform: rotate(180deg); }
-.section-body { display: none; }
-.section.open .section-body { display: block; }
+.sec-hd:hover { background:var(--surface2); }
+.sec.open .sec-hd { border-bottom:1px solid var(--border); }
+.sec-icon { font-size:14px; flex-shrink:0; width:20px; text-align:center; }
+.sec-title { font-family:var(--serif); font-size:14px; font-weight:600; flex:1; letter-spacing:-0.01em; }
+.sec-cnt  { font-size:11px; color:var(--muted); }
+.sec-chev { font-size:9px; color:var(--muted); transition:transform 0.2s; }
+.sec.open .sec-chev { transform:rotate(180deg); }
+.sec-bd { display:none; }
+.sec.open .sec-bd { display:block; }
 
 /* ITEMS */
 .item {
   display: grid;
-  grid-template-columns: 22px 1fr auto;
-  gap: 12px;
+  grid-template-columns: 20px 1fr auto;
+  gap: 11px;
   align-items: start;
-  padding: 11px 18px;
-  border-bottom: 1px solid #f0f0e8;
+  padding: 10px 16px;
+  border-bottom: 1px solid #eeede6;
   transition: background 0.1s;
 }
-.item:last-of-type { border-bottom: none; }
-.item:hover { background: var(--surface2); }
+.item:last-of-type { border-bottom:none; }
+.item:hover { background:var(--surface2); }
 
-.item-chk {
-  width: 18px; height: 18px;
-  border-radius: 4px;
-  border: 1.5px solid var(--border);
-  cursor: pointer;
-  appearance: none;
-  margin-top: 1px;
-  position: relative;
-  transition: all 0.15s;
-  background: white;
-  flex-shrink: 0;
+.chk {
+  width:17px; height:17px;
+  border-radius:4px;
+  border:1.5px solid var(--border);
+  cursor:pointer;
+  appearance:none;
+  margin-top:2px;
+  position:relative;
+  transition:all 0.14s;
+  background:#fff;
+  flex-shrink:0;
 }
-.item-chk:checked { background: var(--navy); border-color: var(--navy); }
-.item-chk:checked::after { content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: white; font-size: 10px; font-weight: 700; }
-.item-chk.is-fail { background: var(--red); border-color: var(--red); }
-.item-chk.is-fail::after { content: '✕'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: white; font-size: 10px; font-weight: 700; }
-.item-chk:disabled { opacity: 0.35; cursor: not-allowed; }
+.chk:checked { background:var(--navy); border-color:var(--navy); }
+.chk:checked::after { content:'✓'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:9px; font-weight:700; }
+.chk.fail { background:var(--red); border-color:var(--red); }
+.chk.fail::after { content:'✕'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:9px; font-weight:700; }
+.chk:disabled { opacity:0.3; cursor:not-allowed; }
 
-.item-label strong { display: block; font-weight: 500; font-size: 12.5px; margin-bottom: 2px; }
-.item-label small { color: var(--muted); font-size: 11px; }
-.item-label .item-note-text { font-size: 11px; color: var(--amber); margin-top: 4px; font-style: italic; }
+.item-lbl strong { display:block; font-weight:500; font-size:12.5px; margin-bottom:2px; line-height:1.3; }
+.item-lbl small  { color:var(--muted); font-size:11px; line-height:1.4; }
+.item-note-preview { font-size:11px; color:var(--amber); margin-top:3px; font-style:italic; }
 
-.item-acts { display: flex; gap: 4px; }
-.act-btn {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 3px 8px;
-  font-family: var(--mono);
-  font-size: 10px;
-  cursor: pointer;
-  color: var(--muted);
-  transition: all 0.15s;
-  white-space: nowrap;
+.item-acts { display:flex; gap:3px; flex-shrink:0; }
+.act {
+  background:none;
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:3px 7px;
+  font-family:var(--mono);
+  font-size:10px;
+  cursor:pointer;
+  color:var(--muted);
+  transition:all 0.13s;
+  white-space:nowrap;
 }
-.act-btn:hover { border-color: var(--navy); color: var(--navy); }
-.act-btn.is-fail { background: var(--red-dim); border-color: #ffb0b0; color: var(--red); }
-.act-btn.is-na { background: var(--surface2); color: var(--muted); }
+.act:hover { border-color:var(--navy); color:var(--navy); }
+.act.on-fail { background:var(--red-bg); border-color:#fbb; color:var(--red); }
+.act.on-na   { background:var(--surface2); color:var(--muted); }
 
-.note-row { padding: 8px 18px 10px 52px; background: var(--surface2); border-bottom: 1px solid #f0f0e8; }
+.note-row {
+  padding: 7px 16px 9px 47px;
+  background: var(--surface2);
+  border-bottom: 1px solid #eeede6;
+}
 .note-row input {
-  width: 100%;
-  font-family: var(--mono);
-  font-size: 11px;
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: white;
-  color: var(--text);
-  outline: none;
+  width:100%;
+  font-family:var(--mono);
+  font-size:11px;
+  padding:5px 9px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+  transition:border-color 0.14s;
 }
-.note-row input:focus { border-color: var(--navy); }
+.note-row input:focus { border-color:var(--navy); }
 
-.section-notes { padding: 10px 18px 14px; background: var(--surface2); border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
-.section-notes label { font-size: 11px; color: var(--muted); flex-shrink: 0; }
-.section-notes input { flex: 1; font-family: var(--mono); font-size: 11px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; background: white; color: var(--text); outline: none; }
-.section-notes input:focus { border-color: var(--navy); }
+.sec-notes {
+  padding: 9px 16px 11px;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.sec-notes label { font-size:11px; color:var(--muted); flex-shrink:0; }
+.sec-notes input {
+  flex:1;
+  font-family:var(--mono);
+  font-size:11px;
+  padding:5px 9px;
+  border:1px solid var(--border);
+  border-radius:4px;
+  background:#fff;
+  color:var(--text);
+  outline:none;
+}
+.sec-notes input:focus { border-color:var(--navy); }
 
-/* SAVE STATE */
-.save-bar {
+/* ── SAVE PILL ── */
+.save-pill {
   position: fixed;
-  bottom: 24px;
-  right: 32px;
-  background: var(--navy);
-  color: white;
+  bottom: 22px; right: 26px;
   font-size: 11px;
-  padding: 10px 18px;
+  padding: 8px 16px;
   border-radius: 100px;
-  box-shadow: var(--shadow-lg);
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: all 0.3s;
+  gap: 7px;
+  box-shadow: var(--sh-lg);
   opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-}
-.save-bar.show { opacity: 1; transform: none; }
-.save-bar.saving { background: var(--amber); color: white; }
-.save-bar.saved { background: var(--green); color: white; }
-.save-bar.error { background: var(--red); color: white; }
-
-/* LOADING */
-.spinner {
-  width: 16px; height: 16px;
-  border: 2px solid rgba(255,255,255,0.3);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.loader-overlay {
-  position: fixed; inset: 0;
-  background: rgba(242,241,235,0.85);
-  backdrop-filter: blur(4px);
-  z-index: 300;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  font-size: 12px;
-  color: var(--muted);
-}
-.loader-overlay .big-spinner {
-  width: 36px; height: 36px;
-  border: 3px solid var(--border);
-  border-top-color: var(--navy);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-/* TOAST */
-.toast {
-  position: fixed;
-  top: 20px; right: 24px;
-  background: var(--text);
-  color: white;
-  font-size: 12px;
-  padding: 10px 18px;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-lg);
-  z-index: 500;
-  opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(6px);
   transition: all 0.25s;
   pointer-events: none;
+  z-index: 80;
 }
-.toast.show { opacity: 1; transform: none; }
-.toast.ok { background: var(--green); }
-.toast.err { background: var(--red); }
+.save-pill.show { opacity:1; transform:none; }
+.save-pill.saving { background:var(--navy); color:#fff; }
+.save-pill.ok     { background:var(--green); color:#fff; }
+.save-pill.err    { background:var(--red); color:#fff; }
 
-@media (max-width: 700px) {
-  .sidebar { transform: translateX(-100%); }
-  .main { margin-left: 0; }
+.spin {
+  width:13px; height:13px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.65s linear infinite;
+  flex-shrink:0;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed; top:18px; right:22px;
+  font-size:12px; padding:9px 16px;
+  border-radius:var(--r);
+  box-shadow:var(--sh-lg);
+  z-index:500;
+  opacity:0; transform:translateY(-5px);
+  transition:all 0.22s;
+  pointer-events:none;
+}
+.toast.on { opacity:1; transform:none; }
+.toast.ok  { background:var(--green); color:#fff; }
+.toast.err { background:var(--red); color:#fff; }
+.toast.inf { background:var(--navy); color:#fff; }
+
+/* ── LOADER ── */
+.loader {
+  position:fixed; inset:0;
+  background:rgba(239,237,230,0.8);
+  backdrop-filter:blur(4px);
+  z-index:400;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:13px;
+  font-size:12px;
+  color:var(--muted);
+}
+.loader.on { display:flex; }
+.big-spin {
+  width:32px; height:32px;
+  border:3px solid var(--border);
+  border-top-color:var(--navy);
+  border-radius:50%;
+  animation:spin 0.75s linear infinite;
+}
+
+/* ── CONFIRM DIALOG ── */
+.confirm-box {
+  background:var(--red-bg);
+  border:1px solid #fcc;
+  border-radius:var(--r);
+  padding:10px 14px;
+  display:none;
+  align-items:center;
+  gap:10px;
+  margin-top:8px;
+  font-size:12px;
+}
+.confirm-box.on { display:flex; }
+
+@media(max-width:640px){
+  .sidebar { display:none; }
+  .main { margin-left:0; }
+  .item { grid-template-columns: 20px 1fr; }
+  .item-acts { grid-column:2; }
 }
 </style>
 </head>
 <body>
 
-<div class="layout">
+<div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <div class="logo-mark">Reciprocal<span>.</span>Space</div>
-      <div class="logo-sub">QA Dashboard</div>
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-wordmark">Reciprocal<em>.</em>Space</div>
+    <div class="sb-sub">QA Dashboard</div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section-label">Views</div>
+    <div class="sb-item active" id="nav-dash" onclick="goPage('dash')">
+      <span class="si">⊞</span> Dashboard
     </div>
-    <nav class="sidebar-nav">
-      <div class="nav-label">Navigation</div>
-      <div class="nav-item active" onclick="showPage('dashboard')" id="nav-dashboard">
-        <span class="icon">⊞</span> Dashboard
-      </div>
-      <div class="nav-item" onclick="openNewModal()" id="nav-new">
-        <span class="icon">＋</span> New Checklist
-      </div>
-      <div class="nav-label" style="margin-top:8px;">Settings</div>
-      <div class="nav-item" onclick="showPage('settings')" id="nav-settings">
-        <span class="icon">⚙</span> API Setup
-      </div>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="api-status">
-        <div class="api-dot" id="apiDot"></div>
-        <span id="apiStatusText">Not connected</span>
+    <div class="sb-item" onclick="openNewModal()">
+      <span class="si">＋</span> New Checklist
+    </div>
+    <div class="sb-section-label">Account</div>
+    <div class="sb-item" id="nav-settings" onclick="goPage('settings')">
+      <span class="si">⚙</span> Settings
+    </div>
+  </nav>
+  <div class="sb-foot">
+    <div class="dot" id="connDot"></div>
+    <span id="connLabel">Connecting…</span>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page on" id="page-dash">
+    <div class="topbar">
+      <div class="topbar-title">Checklists</div>
+      <div class="topbar-right">
+        <button class="btn btn-ghost" onclick="loadDash()">↺ Refresh</button>
+        <button class="btn btn-accent" onclick="openNewModal()">＋ New</button>
       </div>
     </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- SETUP PAGE -->
-    <div class="page active" id="page-setup">
-      <div class="setup-card">
-        <div class="setup-hero">
-          <h1>Connect to ClickUp</h1>
-          <p>Your checklist data will be stored as ClickUp Docs — accessible to the whole team.</p>
+    <div class="dash-body">
+      <div class="stats-row" id="statsRow"></div>
+      <div class="grid" id="grid">
+        <div class="empty">
+          <div class="big-spin" style="margin:0 auto 14px;"></div>
+          <p>Loading from Supabase…</p>
         </div>
-        <div class="setup-body">
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST VIEW -->
+  <div class="page" id="page-cl">
+    <div class="cl-topbar">
+      <div class="cl-back" onclick="goPage('dash')">← Back</div>
+      <div class="cl-info">
+        <div class="cl-name" id="clName">—</div>
+        <div class="cl-url"  id="clUrl">—</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:11px;color:var(--muted);" id="clChecker"></span>
+        <button class="btn btn-ghost" onclick="copyReport()">↓ Copy Report</button>
+        <button class="btn btn-red" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+
+    <!-- summary pills -->
+    <div style="padding:10px 28px 0;display:flex;gap:8px;flex-wrap:wrap;" id="clSummary"></div>
+
+    <div class="cl-body" id="clBody"></div>
+
+    <!-- delete confirm -->
+    <div style="padding:0 28px;" id="deleteConfirmWrap">
+      <div class="confirm-box" id="deleteConfirm">
+        <span>Permanently delete this checklist?</span>
+        <button class="btn btn-red" onclick="doDelete()" style="padding:5px 12px;">Yes, delete</button>
+        <button class="btn btn-ghost" onclick="cancelDelete()" style="padding:5px 12px;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div class="topbar">
+      <div class="topbar-title">Settings</div>
+    </div>
+    <div style="padding:28px;max-width:480px;">
+      <div class="sec" style="overflow:visible;">
+        <div style="padding:18px 20px;">
+          <h3 style="font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:16px;">Supabase Connection</h3>
           <div class="field">
-            <label>Your ClickUp API Key</label>
-            <input type="password" id="apiKeyInput" placeholder="pk_12345678_XXXXXXXXXXXX" autocomplete="off">
-            <div class="hint">Found in ClickUp → Settings → Apps → API Token. Stored locally in your browser only.</div>
+            <label>Project URL</label>
+            <input type="text" id="setUrl" placeholder="https://xxxx.supabase.co">
           </div>
-          <div class="field" id="workspaceField" style="display:none;">
-            <label>Workspace</label>
-            <select id="workspaceSelect"><option>Loading…</option></select>
+          <div class="field">
+            <label>Anon / Public Key</label>
+            <input type="text" id="setKey" placeholder="sb_publishable_…">
           </div>
-          <div class="field" id="spaceField" style="display:none;">
-            <label>Space (where checklists will be saved)</label>
-            <select id="spaceSelect"><option>Loading…</option></select>
+          <div style="display:flex;gap:8px;margin-top:4px;">
+            <button class="btn btn-navy" onclick="saveSettings()">Save & Reconnect</button>
+            <button class="btn btn-red" onclick="clearSettings()">Reset</button>
           </div>
-          <button class="btn btn-primary" id="connectBtn" onclick="handleConnect()" style="width:100%;justify-content:center;padding:12px;">Connect →</button>
-          <div id="connectError" style="margin-top:12px;font-size:11px;color:var(--red);display:none;"></div>
+          <div id="setStatus" style="margin-top:10px;font-size:11px;color:var(--muted);"></div>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- DASHBOARD PAGE -->
-    <div class="page" id="page-dashboard">
-      <div class="topbar">
-        <div class="topbar-title">Checklists</div>
-        <div class="topbar-actions">
-          <button class="btn btn-ghost" onclick="loadDashboard()">↺ Refresh</button>
-          <button class="btn btn-accent" onclick="openNewModal()">＋ New Checklist</button>
-        </div>
-      </div>
-      <div style="padding:28px 32px;">
-        <div class="dash-stats" id="dashStats"></div>
-        <div class="checklist-grid" id="checklistGrid">
-          <div class="empty-state" style="grid-column:1/-1;">
-            <div class="loader-overlay" style="position:relative;background:none;backdrop-filter:none;padding:48px 0;">
-              <div class="big-spinner"></div>
-              <span>Loading checklists…</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CHECKLIST VIEW PAGE -->
-    <div class="page" id="page-checklist">
-      <div class="cl-topbar">
-        <div class="cl-topbar-back" onclick="showPage('dashboard')">← Back</div>
-        <div class="cl-topbar-info">
-          <div class="cl-topbar-name" id="clName">—</div>
-          <div class="cl-topbar-url" id="clUrl">—</div>
-        </div>
-        <div class="topbar-actions">
-          <span id="clCheckedBy" style="font-size:11px;color:var(--muted);"></span>
-          <button class="btn btn-ghost" onclick="exportReport()">↓ Export Report</button>
-        </div>
-      </div>
-      <div class="progress-wrap"><div class="progress-fill" id="clProgress"></div></div>
-
-      <div class="checklist-page" id="clBody"></div>
-    </div>
-
-    <!-- SETTINGS PAGE -->
-    <div class="page" id="page-settings">
-      <div class="topbar">
-        <div class="topbar-title">API Setup</div>
-      </div>
-      <div style="padding:32px;max-width:520px;">
-        <div class="section" style="overflow:visible;">
-          <div style="padding:20px 24px;">
-            <h3 style="font-family:var(--serif);font-size:16px;font-weight:600;margin-bottom:16px;">Connection</h3>
-            <div class="field">
-              <label>API Key</label>
-              <input type="password" id="settingsApiKey" placeholder="pk_…">
-            </div>
-            <div class="field">
-              <label>Workspace</label>
-              <select id="settingsWorkspace"><option>—</option></select>
-            </div>
-            <div class="field">
-              <label>Space</label>
-              <select id="settingsSpace"><option>—</option></select>
-            </div>
-            <div style="display:flex;gap:10px;">
-              <button class="btn btn-primary" onclick="saveSettings()">Save & Reconnect</button>
-              <button class="btn btn-danger" onclick="clearAll()">Clear All Data</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
+</main>
 </div>
 
 <!-- NEW CHECKLIST MODAL -->
-<div class="modal-overlay" id="newModal">
+<div class="overlay" id="newOverlay">
   <div class="modal">
-    <div class="modal-header">
-      <h2>New Checklist</h2>
-      <p>Creates a ClickUp Doc to track this project's QA.</p>
+    <div class="modal-hd">
+      <h2>New QA Checklist</h2>
+      <p>Saved instantly to your shared Supabase database.</p>
     </div>
-    <div class="modal-body">
+    <div class="modal-bd">
       <div class="field">
-        <label>Project / Client Name</label>
-        <input type="text" id="newName" placeholder="e.g. Exciva Website v2" maxlength="80">
+        <label>Project / Client Name *</label>
+        <input type="text" id="nName" placeholder="e.g. Exciva Website v2" maxlength="80">
       </div>
       <div class="field">
         <label>Staging URL</label>
-        <input type="text" id="newUrl" placeholder="https://…" maxlength="200">
+        <input type="url" id="nUrl" placeholder="https://…" maxlength="200">
       </div>
       <div class="field">
         <label>Your Name</label>
-        <input type="text" id="newChecker" placeholder="e.g. Ross" maxlength="40">
+        <input type="text" id="nChecker" placeholder="e.g. Ross" maxlength="40">
       </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-ft">
       <button class="btn btn-ghost" onclick="closeNewModal()">Cancel</button>
       <button class="btn btn-accent" id="createBtn" onclick="createChecklist()">Create →</button>
     </div>
   </div>
 </div>
 
-<!-- SAVE BAR -->
-<div class="save-bar" id="saveBar">
-  <div class="spinner" id="saveSpinner" style="display:none;"></div>
-  <span id="saveBarText">Saving…</span>
+<!-- SAVE PILL -->
+<div class="save-pill" id="savePill">
+  <div class="spin" id="saveSpin" style="display:none;"></div>
+  <span id="saveTxt"></span>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <!-- LOADER -->
-<div class="loader-overlay" id="loaderOverlay" style="display:none;">
-  <div class="big-spinner"></div>
-  <span id="loaderText">Loading…</span>
+<div class="loader" id="loader">
+  <div class="big-spin"></div>
+  <span id="loaderTxt">Loading…</span>
 </div>
 
 <script>
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
+// CONFIG — baked in, no setup required
+// ══════════════════════════════════════════
+const DEFAULT_URL = 'https://dhxvwspdhqpizkrrjign.supabase.co';
+const DEFAULT_KEY = 'sb_publishable_bYlVcPXyzi8BpJXpt9oMzA_S1JHfD5X';
+
+function getCfg() {
+  return {
+    url: localStorage.getItem('rs_sb_url') || DEFAULT_URL,
+    key: localStorage.getItem('rs_sb_key') || DEFAULT_KEY,
+  };
+}
+
+// ══════════════════════════════════════════
+// SUPABASE REST HELPERS
+// ══════════════════════════════════════════
+function sbFetch(path, opts = {}) {
+  const { url, key } = getCfg();
+  return fetch(`${url}/rest/v1/${path}`, {
+    ...opts,
+    headers: {
+      'apikey': key,
+      'Authorization': `Bearer ${key}`,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || '',
+      ...(opts.headers || {}),
+    },
+  });
+}
+
+async function sbGet(path) {
+  const r = await sbFetch(path);
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbPost(path, body) {
+  const r = await sbFetch(path, {
+    method: 'POST',
+    prefer: 'return=representation',
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbPatch(path, body) {
+  const r = await sbFetch(path, {
+    method: 'PATCH',
+    prefer: 'return=representation',
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function sbDelete(path) {
+  const r = await sbFetch(path, { method: 'DELETE' });
+  if (!r.ok) throw new Error(await r.text());
+}
+
+// ══════════════════════════════════════════
 // CHECKLIST DATA
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
 const CHECKLIST = [
   { id:'content', icon:'✍️', title:'Copy & Content', items:[
     { id:'c1', label:'All placeholder text removed', detail:'No Lorem Ipsum, TBD, [CLIENT NAME], or template copy' },
@@ -832,286 +883,114 @@ const CHECKLIST = [
   { id:'handover', icon:'📦', title:'Client Handover', items:[
     { id:'h1', label:'CMS login details prepared', detail:'Or agreed handover method' },
     { id:'h2', label:'Domain / DNS notes documented', detail:'Any custom config the client needs to know' },
-    { id:'h3', label:'Staging password removed (or noted)', detail:"Client shouldn't hit a password page" },
-    { id:'h4', label:'Browser tab title is correct on all pages', detail:'Not "Home | Framer" or similar default' },
-    { id:'h5', label:'Social share image (OG image) set', detail:'Test with Twitter card validator or opengraph.xyz' },
+    { id:'h3', label:'Staging password removed', detail:"Client shouldn't hit a password wall" },
+    { id:'h4', label:'Browser tab title correct on all pages', detail:'Not "Home | Framer" or similar default' },
+    { id:'h5', label:'Social share image (OG image) set', detail:'Test with opengraph.xyz' },
   ]},
 ];
 
-const TOTAL_ITEMS = CHECKLIST.reduce((a,s) => a + s.items.length, 0);
+const TOTAL = CHECKLIST.reduce((a, s) => a + s.items.length, 0);
 
-// ═══════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════
-let cfg = {};          // { apiKey, workspaceId, spaceId, workspaceName, spaceName }
-let currentDocId = null;
-let currentMeta = {};  // { name, url, checker }
-let currentChecks = {};// { itemId: { checked, failed, na, note }, 'snote-X': '' }
-let saveTimer = null;
-let workspaces = [];
-let spaces = [];
+// ══════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════
+let currentId    = null;   // UUID of open checklist
+let currentMeta  = {};     // { name, url, checker }
+let currentChecks = {};    // { itemId: { checked, failed, na, note }, 'snote-X': '' }
+let saveTimer    = null;
+let allChecklists = [];
 
-function loadCfg() {
-  try { cfg = JSON.parse(localStorage.getItem('rs-qa-cfg') || '{}'); } catch(e) { cfg = {}; }
-}
-function saveCfg() { localStorage.setItem('rs-qa-cfg', JSON.stringify(cfg)); }
-
-// ═══════════════════════════════════════════════
-// CLICKUP API
-// ═══════════════════════════════════════════════
-const CU = 'https://api.clickup.com/api/v2';
-
-async function cuFetch(path, opts = {}) {
-  const res = await fetch(CU + path, {
-    ...opts,
-    headers: { 'Authorization': cfg.apiKey, 'Content-Type': 'application/json', ...(opts.headers||{}) }
-  });
-  if (!res.ok) throw new Error(`ClickUp ${res.status}: ${await res.text()}`);
-  return res.json();
-}
-
-async function getWorkspaces() {
-  const d = await cuFetch('/team');
-  return d.teams || [];
-}
-
-async function getSpaces(wsId) {
-  const d = await cuFetch(`/team/${wsId}/space?archived=false`);
-  return d.spaces || [];
-}
-
-// Storage strategy: task name holds the project name, and we store all checklist
-// JSON in a task COMMENT prefixed with "RS_QA_DATA:" — comments are returned
-// verbatim by ClickUp, unlike the description field which gets sanitised/stripped.
-
-const DATA_PREFIX = 'RS_QA_DATA:';
-
-async function getOrCreateList(spaceId) {
-  const d = await cuFetch(`/space/${spaceId}/list?archived=false`);
-  const lists = d.lists || [];
-  const existing = lists.find(l => l.name === 'RS QA Checklists');
-  if (existing) return existing.id;
-  const created = await cuFetch(`/space/${spaceId}/list`, {
-    method: 'POST',
-    body: JSON.stringify({ name: 'RS QA Checklists' })
-  });
-  return created.id;
-}
-
-async function getAllChecklists() {
-  const listId = await getOrCreateList(cfg.spaceId);
-  const d = await cuFetch(`/list/${listId}/task?archived=false&include_closed=true`);
-  const tasks = d.tasks || [];
-  // Load each task's data comment in parallel
-  const results = await Promise.all(tasks.map(t => loadTaskData(t)));
-  return results;
-}
-
-async function loadTaskData(task) {
-  // Fetch comments and find our data comment
-  let data = { meta: { name: task.name, url: '', checker: '', created: 0 }, checks: {} };
-  try {
-    const cd = await cuFetch(`/task/${task.id}/comment`);
-    const comments = cd.comments || [];
-    // Find the latest RS_QA_DATA comment (last one wins)
-    const dataComments = comments.filter(c =>
-      (c.comment_text || '').startsWith(DATA_PREFIX)
-    );
-    if (dataComments.length > 0) {
-      const latest = dataComments[dataComments.length - 1];
-      const json = latest.comment_text.slice(DATA_PREFIX.length);
-      data = JSON.parse(json);
-    }
-  } catch(e) { /* use defaults */ }
-
-  const checks = data.checks || {};
-  const passed = countPassed(checks);
-  const failed = countFailed(checks);
-  const na = countNA(checks);
-  const pct = Math.round((passed / Math.max(1, TOTAL_ITEMS - na)) * 100);
-  return {
-    id: task.id,
-    name: data.meta?.name || task.name,
-    url: data.meta?.url || '',
-    checker: data.meta?.checker || '',
-    created: data.meta?.created || 0,
-    checks,
-    passed, failed, na, pct,
-    status: task.status?.status || 'to do'
-  };
-}
-
-async function createTask(name, url, checker) {
-  const listId = await getOrCreateList(cfg.spaceId);
-  // Create a minimal task — data goes in a comment after creation
-  const task = await cuFetch(`/list/${listId}/task`, {
-    method: 'POST',
-    body: JSON.stringify({ name, status: 'to do' })
-  });
-  // Write initial data comment
-  const meta = { name, url, checker, created: Date.now() };
-  await writeDataComment(task.id, meta, {});
-  return task;
-}
-
-async function updateTask(taskId, meta, checks) {
-  const passed = countPassed(checks);
-  const failed = countFailed(checks);
-  const na = countNA(checks);
-  const pct = Math.round((passed / Math.max(1, TOTAL_ITEMS - na)) * 100) || 0;
-  const status = pct === 100 ? 'complete' : failed > 0 ? 'in progress' : 'to do';
-
-  // Update task status
-  await cuFetch(`/task/${taskId}`, {
-    method: 'PUT',
-    body: JSON.stringify({ status })
-  });
-
-  // Write new data comment (we accumulate comments but always read the last one)
-  await writeDataComment(taskId, meta, checks);
-}
-
-async function writeDataComment(taskId, meta, checks) {
-  const payload = JSON.stringify({ meta, checks });
-  await cuFetch(`/task/${taskId}/comment`, {
-    method: 'POST',
-    body: JSON.stringify({ comment_text: DATA_PREFIX + payload })
-  });
-}
-
-function countPassed(c) { return Object.keys(c).filter(k => !k.startsWith('snote-') && c[k].checked).length; }
-function countFailed(c) { return Object.keys(c).filter(k => !k.startsWith('snote-') && c[k].failed).length; }
-function countNA(c) { return Object.keys(c).filter(k => !k.startsWith('snote-') && c[k].na).length; }
-
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
 // PAGES
-// ═══════════════════════════════════════════════
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const navEl = document.getElementById('nav-' + name);
-  if (navEl) navEl.classList.add('active');
-  if (name === 'dashboard') loadDashboard();
+// ══════════════════════════════════════════
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.getElementById('page-' + name).classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+  const nav = document.getElementById('nav-' + name);
+  if (nav) nav.classList.add('active');
+  if (name === 'dash') loadDash();
 }
 
-// ═══════════════════════════════════════════════
-// SETUP / CONNECT
-// ═══════════════════════════════════════════════
-async function handleConnect() {
-  const key = document.getElementById('apiKeyInput').value.trim();
-  if (!key) { showError('connectError', 'Please enter your API key.'); return; }
-  cfg.apiKey = key;
-
-  const btn = document.getElementById('connectBtn');
-  btn.disabled = true; btn.textContent = 'Connecting…';
-  hideEl('connectError');
-
-  try {
-    workspaces = await getWorkspaces();
-    if (!workspaces.length) throw new Error('No workspaces found.');
-
-    const wsField = document.getElementById('workspaceField');
-    const wsSelect = document.getElementById('workspaceSelect');
-    wsSelect.innerHTML = workspaces.map(w => `<option value="${w.id}">${w.name}</option>`).join('');
-    wsField.style.display = 'block';
-
-    cfg.workspaceId = workspaces[0].id;
-    await loadSpacesForSetup(cfg.workspaceId);
-
-    wsSelect.onchange = async () => {
-      cfg.workspaceId = wsSelect.value;
-      await loadSpacesForSetup(cfg.workspaceId);
-    };
-
-    btn.disabled = false; btn.textContent = 'Save & Connect →';
-    btn.onclick = finishConnect;
-  } catch(e) {
-    btn.disabled = false; btn.textContent = 'Connect →';
-    btn.onclick = handleConnect;
-    showError('connectError', 'Could not connect: ' + e.message);
-  }
-}
-
-async function loadSpacesForSetup(wsId) {
-  spaces = await getSpaces(wsId);
-  const spaceSelect = document.getElementById('spaceSelect');
-  spaceSelect.innerHTML = spaces.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
-  document.getElementById('spaceField').style.display = 'block';
-}
-
-function finishConnect() {
-  const wsSelect = document.getElementById('workspaceSelect');
-  const spaceSelect = document.getElementById('spaceSelect');
-  cfg.workspaceId = wsSelect.value;
-  cfg.workspaceName = wsSelect.options[wsSelect.selectedIndex].text;
-  cfg.spaceId = spaceSelect.value;
-  cfg.spaceName = spaceSelect.options[spaceSelect.selectedIndex].text;
-  saveCfg();
-  updateApiStatus(true);
-  showPage('dashboard');
-}
-
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
 // DASHBOARD
-// ═══════════════════════════════════════════════
-async function loadDashboard() {
-  const grid = document.getElementById('checklistGrid');
-  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--muted);">
-    <div style="width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;"></div>
-    Loading checklists from ClickUp…
-  </div>`;
+// ══════════════════════════════════════════
+async function loadDash() {
+  document.getElementById('grid').innerHTML = `
+    <div class="empty">
+      <div class="big-spin" style="margin:0 auto 14px;"></div>
+      <p>Loading from Supabase…</p>
+    </div>`;
+  document.getElementById('statsRow').innerHTML = '';
 
   try {
-    const lists = await getAllChecklists();
-    renderDashboard(lists);
+    const rows = await sbGet('checklists?order=created_at.desc');
+    allChecklists = rows;
+    renderDash(rows);
+    setConn(true);
   } catch(e) {
-    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--red);">Failed to load: ${e.message}</div>`;
+    document.getElementById('grid').innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">⚠️</div>
+        <h3>Could not connect</h3>
+        <p>${esc(e.message)}</p>
+        <p style="margin-top:8px;">Check your Supabase credentials in Settings, and make sure the <code>checklists</code> table exists.</p>
+      </div>`;
+    setConn(false);
   }
 }
 
-function renderDashboard(lists) {
+function renderDash(rows) {
   // Stats
-  const total = lists.length;
-  const done = lists.filter(l => l.pct === 100).length;
-  const withFails = lists.filter(l => l.failed > 0).length;
-  document.getElementById('dashStats').innerHTML = `
-    <div class="stat-card"><div class="stat-val">${total}</div><div class="stat-label">Total checklists</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--green);">${done}</div><div class="stat-label">Completed</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--amber);">${total - done}</div><div class="stat-label">In progress</div></div>
-    <div class="stat-card"><div class="stat-val" style="color:var(--red);">${withFails}</div><div class="stat-label">Have failures</div></div>
+  const done     = rows.filter(r => pct(r) === 100).length;
+  const hasFail  = rows.filter(r => countFailed(r.checks) > 0).length;
+  const inProg   = rows.filter(r => pct(r) > 0 && pct(r) < 100).length;
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat"><div class="stat-n">${rows.length}</div><div class="stat-l">Total</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--green)">${done}</div><div class="stat-l">Complete</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--amber)">${inProg}</div><div class="stat-l">In Progress</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--red)">${hasFail}</div><div class="stat-l">Have Failures</div></div>
   `;
 
-  if (!lists.length) {
-    document.getElementById('checklistGrid').innerHTML = `
-      <div class="empty-state" style="grid-column:1/-1;">
+  if (!rows.length) {
+    document.getElementById('grid').innerHTML = `
+      <div class="empty">
         <div class="empty-icon">📋</div>
         <h3>No checklists yet</h3>
-        <p>Create your first QA checklist to get started. It'll be saved to your ClickUp workspace.</p>
+        <p>Create your first QA checklist — it'll be saved to your shared Supabase database instantly.</p>
         <button class="btn btn-accent" onclick="openNewModal()">＋ New Checklist</button>
       </div>`;
     return;
   }
 
-  const sorted = [...lists].sort((a,b) => b.created - a.created);
-  document.getElementById('checklistGrid').innerHTML = sorted.map(cl => {
-    const stripeClass = cl.pct === 100 ? 'pct-done' : cl.pct >= 70 ? 'pct-high' : cl.pct >= 30 ? 'pct-mid' : 'pct-low';
-    const pctColor = cl.pct === 100 ? 'var(--navy)' : cl.pct >= 70 ? 'var(--green)' : cl.pct >= 30 ? 'var(--amber)' : 'var(--red)';
-    const date = cl.created ? new Date(cl.created).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'}) : '—';
+  document.getElementById('grid').innerHTML = rows.map(r => {
+    const p = pct(r);
+    const barClass = p === 100 ? 'bar-done' : p >= 70 ? 'bar-high' : p >= 30 ? 'bar-mid' : p > 0 ? 'bar-low' : 'bar-todo';
+    const pctColor = p === 100 ? 'var(--navy)' : p >= 70 ? 'var(--green)' : p >= 30 ? 'var(--amber)' : p > 0 ? 'var(--red)' : 'var(--muted)';
+    const passed = countPassed(r.checks);
+    const failed = countFailed(r.checks);
+    const na     = countNA(r.checks);
+    const date   = new Date(r.created_at).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
+    const updated = r.updated_at !== r.created_at
+      ? new Date(r.updated_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})
+      : null;
     return `
-      <div class="cl-card" onclick="openChecklist('${cl.id}')">
-        <div class="cl-card-stripe ${stripeClass}"></div>
-        <div class="cl-card-body">
-          <div class="cl-card-name">${esc(cl.name)}</div>
-          <div class="cl-card-url">${esc(cl.url) || 'No URL set'}</div>
-          <div class="cl-card-meta">
-            <div class="cl-card-pct" style="color:${pctColor}">${cl.pct}%</div>
-            <div class="cl-card-info">${cl.passed}/${TOTAL_ITEMS - cl.na} passed<br>${date}</div>
+      <div class="card" onclick="openChecklist('${r.id}')">
+        <div class="card-bar ${barClass}"></div>
+        <div class="card-body">
+          <div class="card-name">${esc(r.name)}</div>
+          <div class="card-url">${esc(r.url) || '<span style="opacity:0.4">No URL set</span>'}</div>
+          <div class="card-foot">
+            <div class="card-pct" style="color:${pctColor}">${p}%</div>
+            <div class="card-meta">
+              ${passed}/${TOTAL - na} passed<br>
+              ${updated ? `Updated ${updated}` : date}
+            </div>
           </div>
-          <div class="cl-card-badges">
-            ${cl.failed > 0 ? `<span class="badge badge-fail">✕ ${cl.failed} failed</span>` : ''}
-            ${cl.pct === 100 ? `<span class="badge badge-pass">✓ Complete</span>` : ''}
-            ${cl.checker ? `<span class="badge badge-navy">${esc(cl.checker)}</span>` : ''}
+          <div class="chips">
+            ${failed > 0 ? `<span class="chip chip-red">✕ ${failed} failed</span>` : ''}
+            ${p === 100 ? `<span class="chip chip-green">✓ Complete</span>` : ''}
+            ${r.checker ? `<span class="chip chip-navy">${esc(r.checker)}</span>` : ''}
           </div>
         </div>
       </div>
@@ -1119,366 +998,402 @@ function renderDashboard(lists) {
   }).join('');
 }
 
-// ═══════════════════════════════════════════════
-// NEW CHECKLIST MODAL
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
+// HELPERS — counts & pct
+// ══════════════════════════════════════════
+function countPassed(c) { return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].checked).length; }
+function countFailed(c) { return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].failed).length; }
+function countNA(c)     { return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].na).length; }
+function pct(r) {
+  const c = r.checks || {};
+  const passed = countPassed(c);
+  const na     = countNA(c);
+  return Math.round((passed / Math.max(1, TOTAL - na)) * 100);
+}
+
+// ══════════════════════════════════════════
+// NEW CHECKLIST
+// ══════════════════════════════════════════
 function openNewModal() {
-  document.getElementById('newModal').classList.add('open');
-  document.getElementById('newName').focus();
+  document.getElementById('newOverlay').classList.add('on');
+  setTimeout(() => document.getElementById('nName').focus(), 80);
 }
 function closeNewModal() {
-  document.getElementById('newModal').classList.remove('open');
+  document.getElementById('newOverlay').classList.remove('on');
 }
 
 async function createChecklist() {
-  const name = document.getElementById('newName').value.trim();
-  const url = document.getElementById('newUrl').value.trim();
-  const checker = document.getElementById('newChecker').value.trim();
-  if (!name) { toast('Please enter a project name.', 'err'); return; }
+  const name    = document.getElementById('nName').value.trim();
+  const url     = document.getElementById('nUrl').value.trim();
+  const checker = document.getElementById('nChecker').value.trim();
+  if (!name) { toast('Enter a project name first', 'err'); return; }
 
   const btn = document.getElementById('createBtn');
   btn.disabled = true; btn.textContent = 'Creating…';
 
   try {
-    const task = await createTask(name, url, checker);
+    const rows = await sbPost('checklists', { name, url, checker, checks: {} });
+    const row  = Array.isArray(rows) ? rows[0] : rows;
     closeNewModal();
     btn.disabled = false; btn.textContent = 'Create →';
-    document.getElementById('newName').value = '';
-    document.getElementById('newUrl').value = '';
-    document.getElementById('newChecker').value = '';
-    openChecklist(task.id, { name, url, checker, created: Date.now() }, {});
+    ['nName','nUrl','nChecker'].forEach(id => document.getElementById(id).value = '');
+    // Open directly with fresh data — no reload needed
+    openChecklist(row.id, row);
   } catch(e) {
     btn.disabled = false; btn.textContent = 'Create →';
     toast('Error: ' + e.message, 'err');
   }
 }
 
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
 // CHECKLIST VIEW
-// ═══════════════════════════════════════════════
-async function openChecklist(taskId, meta, checks) {
+// ══════════════════════════════════════════
+async function openChecklist(id, rowData) {
   showLoader('Loading checklist…');
-  currentDocId = taskId;
+  currentId = id;
 
   try {
-    if (!meta) {
-      // Load from ClickUp using comment-based storage
-      const task = await cuFetch(`/task/${taskId}`);
-      const parsed = await loadTaskData(task);
-      meta = { name: parsed.name, url: parsed.url, checker: parsed.checker, created: parsed.created };
-      checks = parsed.checks;
+    let row = rowData;
+    if (!row) {
+      const rows = await sbGet(`checklists?id=eq.${id}`);
+      row = rows[0];
+      if (!row) throw new Error('Checklist not found.');
     }
-    currentMeta = meta;
-    currentChecks = checks || {};
 
-    document.getElementById('clName').textContent = meta.name;
-    document.getElementById('clUrl').textContent = meta.url || 'No URL set';
-    document.getElementById('clCheckedBy').textContent = meta.checker ? `By ${meta.checker}` : '';
+    currentMeta   = { name: row.name, url: row.url, checker: row.checker };
+    currentChecks = row.checks || {};
+
+    document.getElementById('clName').textContent    = row.name;
+    document.getElementById('clUrl').textContent     = row.url || 'No URL set';
+    document.getElementById('clChecker').textContent = row.checker ? `By ${row.checker}` : '';
+    document.getElementById('deleteConfirm').classList.remove('on');
 
     renderChecklist();
-    hideLoader();
-    showPage('checklist');
     updateProgress();
+    updateSummary();
+    hideLoader();
+    goPageDirect('cl');
   } catch(e) {
     hideLoader();
-    toast('Could not load checklist: ' + e.message, 'err');
+    toast('Could not load: ' + e.message, 'err');
   }
 }
 
+function goPageDirect(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.getElementById('page-' + name).classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
+}
+
 function renderChecklist() {
-  document.getElementById('clBody').innerHTML = CHECKLIST.map((section, si) => {
-    const items = section.items.map(item => renderItem(item)).join('');
-    const sNote = currentChecks['snote-' + section.id] || '';
+  document.getElementById('clBody').innerHTML = CHECKLIST.map((sec, si) => {
+    const sNote = currentChecks['snote-' + sec.id] || '';
     return `
-      <div class="section ${si === 0 ? 'open' : ''}" id="sec-${section.id}">
-        <div class="section-hdr" onclick="toggleSec('${section.id}')">
-          <span class="section-icon">${section.icon}</span>
-          <span class="section-title">${section.title}</span>
-          <span class="section-cnt" id="scnt-${section.id}"></span>
-          <span class="section-chev">▼</span>
+      <div class="sec ${si===0?'open':''}" id="sec-${sec.id}">
+        <div class="sec-hd" onclick="toggleSec('${sec.id}')">
+          <span class="sec-icon">${sec.icon}</span>
+          <span class="sec-title">${sec.title}</span>
+          <span class="sec-cnt" id="scnt-${sec.id}"></span>
+          <span class="sec-chev">▼</span>
         </div>
-        <div class="section-body">
-          ${items}
-          <div class="section-notes">
+        <div class="sec-bd">
+          ${sec.items.map(item => renderItem(item)).join('')}
+          <div class="sec-notes">
             <label>Notes</label>
-            <input type="text" placeholder="Section notes…" value="${esc(sNote)}"
-              onchange="setSnote('${section.id}', this.value)">
+            <input type="text" placeholder="Section-level notes…" value="${esc(sNote)}"
+              onchange="setSNote('${sec.id}', this.value)">
           </div>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
   updateAllCounts();
 }
 
 function renderItem(item) {
   const s = currentChecks[item.id] || {};
-  const chkClass = s.failed ? 'is-fail' : '';
+  const chkCls = s.failed ? 'fail' : '';
+  const showNote = s.failed || (s.note !== undefined && s.note !== '');
   return `
     <div class="item" id="item-${item.id}">
-      <input type="checkbox" class="item-chk ${chkClass}" id="chk-${item.id}"
+      <input type="checkbox" class="chk ${chkCls}" id="chk-${item.id}"
         ${s.checked ? 'checked' : ''}
         ${s.na ? 'disabled' : ''}
         onchange="toggleCheck('${item.id}', this.checked)">
-      <div class="item-label">
-        <strong style="${s.na ? 'opacity:0.35;text-decoration:line-through;' : ''}">${item.label}</strong>
+      <div class="item-lbl">
+        <strong style="${s.na?'opacity:0.35;text-decoration:line-through;':''}">${item.label}</strong>
         ${item.detail ? `<small>${item.detail}</small>` : ''}
-        ${s.note ? `<div class="item-note-text">↳ ${esc(s.note)}</div>` : ''}
+        ${s.note ? `<div class="item-note-preview">↳ ${esc(s.note)}</div>` : ''}
       </div>
       <div class="item-acts">
-        <button class="act-btn ${s.failed ? 'is-fail' : ''}" onclick="toggleFail('${item.id}')">✕ Fail</button>
-        <button class="act-btn ${s.na ? 'is-na' : ''}" onclick="toggleNA('${item.id}')">N/A</button>
-        <button class="act-btn" onclick="promptNote('${item.id}')">+ Note</button>
+        <button class="act ${s.failed?'on-fail':''}" onclick="toggleFail('${item.id}')">✕ Fail</button>
+        <button class="act ${s.na?'on-na':''}"     onclick="toggleNA('${item.id}')">N/A</button>
+        <button class="act"                          onclick="promptNote('${item.id}')">+ Note</button>
       </div>
     </div>
-    ${s.showNote !== false && (s.failed || s.note !== undefined) ? `
-    <div class="note-row" id="noterow-${item.id}" ${(!s.failed && !s.note) ? 'style="display:none;"' : ''}>
-      <input type="text" placeholder="Describe the issue…" value="${esc(s.note || '')}"
-        onchange="setNote('${item.id}', this.value)">
-    </div>` : ''}
-  `;
+    <div class="note-row" id="nr-${item.id}" style="${showNote?'':'display:none;'}">
+      <input type="text" placeholder="Describe the issue…" value="${esc(s.note||'')}"
+        oninput="setNote('${item.id}', this.value)">
+    </div>`;
 }
 
 function toggleSec(id) {
-  document.getElementById('sec-' + id).classList.toggle('open');
+  document.getElementById('sec-'+id).classList.toggle('open');
 }
 
-function getIS(id) { return currentChecks[id] || {}; }
-function setIS(id, upd) {
-  currentChecks[id] = { ...getIS(id), ...upd };
+// State mutations
+function getS(id) { return currentChecks[id] || {}; }
+function setS(id, upd) {
+  currentChecks[id] = { ...getS(id), ...upd };
   scheduleSave();
   updateProgress();
+  updateSummary();
   updateAllCounts();
 }
 
 function toggleCheck(id, checked) {
-  setIS(id, { checked, failed: false });
+  setS(id, { checked, failed: false });
   refreshItem(id);
 }
 function toggleFail(id) {
-  const s = getIS(id);
-  const nowFail = !s.failed;
-  setIS(id, { failed: nowFail, checked: false, na: false });
+  const s = getS(id);
+  const now = !s.failed;
+  setS(id, { failed: now, checked: false, na: false });
   refreshItem(id);
-  if (nowFail) promptNote(id);
+  if (now) { showNoteRow(id); document.querySelector(`#nr-${id} input`)?.focus(); }
 }
 function toggleNA(id) {
-  const s = getIS(id);
-  setIS(id, { na: !s.na, checked: false, failed: false });
+  const s = getS(id);
+  setS(id, { na: !s.na, checked: false, failed: false });
   refreshItem(id);
 }
 function promptNote(id) {
-  setIS(id, { note: getIS(id).note || '' });
-  refreshItem(id);
-  const input = document.querySelector(`#noterow-${id} input`);
-  if (input) { const row = document.getElementById('noterow-' + id); if(row) row.style.display=''; input.focus(); }
+  if (!currentChecks[id]) currentChecks[id] = {};
+  if (currentChecks[id].note === undefined) currentChecks[id].note = '';
+  showNoteRow(id);
+  document.querySelector(`#nr-${id} input`)?.focus();
 }
-function setNote(id, val) { setIS(id, { note: val }); }
-function setSnote(sectionId, val) {
-  currentChecks['snote-' + sectionId] = val;
+function setNote(id, val) { setS(id, { note: val }); }
+function setSNote(secId, val) {
+  currentChecks['snote-'+secId] = val;
   scheduleSave();
+}
+function showNoteRow(id) {
+  const nr = document.getElementById('nr-'+id);
+  if (nr) nr.style.display = '';
 }
 
 function refreshItem(id) {
-  const section = CHECKLIST.find(s => s.items.some(i => i.id === id));
-  const item = section.items.find(i => i.id === id);
-  const el = document.getElementById('item-' + id);
-  const noteRow = document.getElementById('noterow-' + id);
-  if (el) {
-    const s = currentChecks[id] || {};
-    const chkClass = s.failed ? 'is-fail' : '';
-    el.innerHTML = `
-      <input type="checkbox" class="item-chk ${chkClass}" id="chk-${id}"
-        ${s.checked ? 'checked' : ''} ${s.na ? 'disabled' : ''}
-        onchange="toggleCheck('${id}', this.checked)">
-      <div class="item-label">
-        <strong style="${s.na ? 'opacity:0.35;text-decoration:line-through;' : ''}">${item.label}</strong>
-        ${item.detail ? `<small>${item.detail}</small>` : ''}
-        ${s.note ? `<div class="item-note-text">↳ ${esc(s.note)}</div>` : ''}
-      </div>
-      <div class="item-acts">
-        <button class="act-btn ${s.failed ? 'is-fail' : ''}" onclick="toggleFail('${id}')">✕ Fail</button>
-        <button class="act-btn ${s.na ? 'is-na' : ''}" onclick="toggleNA('${id}')">N/A</button>
-        <button class="act-btn" onclick="promptNote('${id}')">+ Note</button>
-      </div>
-    `;
-    // Handle note row
-    if (noteRow) {
-      if (s.failed || s.note !== undefined) {
-        noteRow.style.display = '';
-        const inp = noteRow.querySelector('input');
-        if (inp) inp.value = s.note || '';
-      }
-    } else if (s.failed) {
-      // Insert note row after item
-      const newNoteRow = document.createElement('div');
-      newNoteRow.className = 'note-row';
-      newNoteRow.id = 'noterow-' + id;
-      newNoteRow.innerHTML = `<input type="text" placeholder="Describe the issue…" value="${esc(s.note || '')}" onchange="setNote('${id}', this.value)">`;
-      el.after(newNoteRow);
-      newNoteRow.querySelector('input').focus();
-    }
+  const sec  = CHECKLIST.find(s => s.items.some(i => i.id === id));
+  const item = sec?.items.find(i => i.id === id);
+  if (!item) return;
+  const el = document.getElementById('item-'+id);
+  const nr = document.getElementById('nr-'+id);
+  if (!el) return;
+
+  const s = currentChecks[id] || {};
+  const chkCls = s.failed ? 'fail' : '';
+  el.innerHTML = `
+    <input type="checkbox" class="chk ${chkCls}" id="chk-${id}"
+      ${s.checked?'checked':''} ${s.na?'disabled':''}
+      onchange="toggleCheck('${id}', this.checked)">
+    <div class="item-lbl">
+      <strong style="${s.na?'opacity:0.35;text-decoration:line-through;':''}">${item.label}</strong>
+      ${item.detail ? `<small>${item.detail}</small>` : ''}
+      ${s.note ? `<div class="item-note-preview">↳ ${esc(s.note)}</div>` : ''}
+    </div>
+    <div class="item-acts">
+      <button class="act ${s.failed?'on-fail':''}" onclick="toggleFail('${id}')">✕ Fail</button>
+      <button class="act ${s.na?'on-na':''}"       onclick="toggleNA('${id}')">N/A</button>
+      <button class="act"                            onclick="promptNote('${id}')">+ Note</button>
+    </div>`;
+  if (nr) {
+    nr.style.display = (s.failed || (s.note !== undefined && s.note !== '')) ? '' : 'none';
+    const inp = nr.querySelector('input');
+    if (inp) inp.value = s.note || '';
   }
 }
 
 function updateProgress() {
   const passed = countPassed(currentChecks);
-  const na = countNA(currentChecks);
-  const pct = Math.round((passed / Math.max(1, TOTAL_ITEMS - na)) * 100);
-  document.getElementById('clProgress').style.width = pct + '%';
+  const na     = countNA(currentChecks);
+  const p      = Math.round((passed / Math.max(1, TOTAL - na)) * 100);
+  document.getElementById('progFill').style.width = p + '%';
+}
+
+function updateSummary() {
+  const passed = countPassed(currentChecks);
+  const failed = countFailed(currentChecks);
+  const na     = countNA(currentChecks);
+  const p      = Math.round((passed / Math.max(1, TOTAL - na)) * 100);
+  document.getElementById('clSummary').innerHTML = `
+    <span class="chip chip-navy">${p}% complete</span>
+    <span class="chip chip-green">✓ ${passed} passed</span>
+    ${failed>0?`<span class="chip chip-red">✕ ${failed} failed</span>`:''}
+    ${na>0?`<span class="chip" style="background:var(--surface2);color:var(--muted);">${na} N/A</span>`:''}
+  `;
 }
 
 function updateAllCounts() {
-  CHECKLIST.forEach(section => {
-    const done = section.items.filter(i => {
+  CHECKLIST.forEach(sec => {
+    const done = sec.items.filter(i => {
       const s = currentChecks[i.id] || {};
       return s.checked || s.na;
     }).length;
-    const el = document.getElementById('scnt-' + section.id);
-    if (el) el.textContent = `${done}/${section.items.length}`;
+    const el = document.getElementById('scnt-'+sec.id);
+    if (el) el.textContent = `${done}/${sec.items.length}`;
   });
 }
 
-// ═══════════════════════════════════════════════
-// SAVE
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
+// SAVE TO SUPABASE
+// ══════════════════════════════════════════
 function scheduleSave() {
   clearTimeout(saveTimer);
-  setSaveBar('saving', 'Saving…');
-  saveTimer = setTimeout(doSave, 1200);
+  setPill('saving', 'Saving…', true);
+  saveTimer = setTimeout(doSave, 1000);
 }
 
 async function doSave() {
   try {
-    await updateTask(currentDocId, currentMeta, currentChecks);
-    setSaveBar('saved', 'Saved to ClickUp ✓');
-    setTimeout(() => hideSaveBar(), 2000);
+    await sbPatch(`checklists?id=eq.${currentId}`, {
+      checks: currentChecks,
+      updated_at: new Date().toISOString(),
+    });
+    setPill('ok', 'Saved ✓', false);
+    setTimeout(hidePill, 2000);
   } catch(e) {
-    setSaveBar('error', 'Save failed — ' + e.message);
+    setPill('err', 'Save failed — ' + e.message, false);
   }
 }
 
-function setSaveBar(type, text) {
-  const bar = document.getElementById('saveBar');
-  bar.className = 'save-bar show ' + type;
-  document.getElementById('saveBarText').textContent = text;
-  document.getElementById('saveSpinner').style.display = type === 'saving' ? '' : 'none';
+function setPill(cls, txt, spin) {
+  const pill = document.getElementById('savePill');
+  pill.className = `save-pill show ${cls}`;
+  document.getElementById('saveTxt').textContent = txt;
+  document.getElementById('saveSpin').style.display = spin ? '' : 'none';
 }
-function hideSaveBar() { document.getElementById('saveBar').className = 'save-bar'; }
+function hidePill() {
+  document.getElementById('savePill').className = 'save-pill';
+}
 
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
+// DELETE
+// ══════════════════════════════════════════
+function confirmDelete() {
+  document.getElementById('deleteConfirm').classList.add('on');
+}
+function cancelDelete() {
+  document.getElementById('deleteConfirm').classList.remove('on');
+}
+async function doDelete() {
+  try {
+    await sbDelete(`checklists?id=eq.${currentId}`);
+    toast('Checklist deleted', 'inf');
+    goPage('dash');
+  } catch(e) {
+    toast('Delete failed: ' + e.message, 'err');
+  }
+}
+
+// ══════════════════════════════════════════
 // EXPORT REPORT
-// ═══════════════════════════════════════════════
-function exportReport() {
+// ══════════════════════════════════════════
+function copyReport() {
   const passed = countPassed(currentChecks);
   const failed = countFailed(currentChecks);
-  const na = countNA(currentChecks);
-  const pct = Math.round((passed / Math.max(1, TOTAL_ITEMS - na)) * 100);
-  const date = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
+  const na     = countNA(currentChecks);
+  const p      = Math.round((passed / Math.max(1, TOTAL - na)) * 100);
+  const date   = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
 
-  let txt = `RS QA REPORT\n${'═'.repeat(50)}\n`;
-  txt += `Project:    ${currentMeta.name || '—'}\n`;
-  txt += `URL:        ${currentMeta.url || '—'}\n`;
-  txt += `Checked by: ${currentMeta.checker || '—'}\n`;
-  txt += `Date:       ${date}\n`;
-  txt += `Score:      ${pct}% (${passed} passed, ${failed} failed, ${na} N/A)\n`;
-  txt += `${'─'.repeat(50)}\n\n`;
+  let out = `RS QA REPORT\n${'═'.repeat(48)}\n`;
+  out += `Project:    ${currentMeta.name || '—'}\n`;
+  out += `URL:        ${currentMeta.url  || '—'}\n`;
+  out += `Checked by: ${currentMeta.checker || '—'}\n`;
+  out += `Date:       ${date}\n`;
+  out += `Score:      ${p}% — ${passed} passed, ${failed} failed, ${na} N/A\n`;
+  out += `${'─'.repeat(48)}\n\n`;
 
-  let failLines = [];
-  let noteLines = [];
-
-  CHECKLIST.forEach(section => {
-    section.items.forEach(item => {
+  const fails = [], notes = [];
+  CHECKLIST.forEach(sec => {
+    sec.items.forEach(item => {
       const s = currentChecks[item.id] || {};
-      if (s.failed) failLines.push(`  [FAIL] ${item.label} — ${section.title}${s.note ? '\n         → '+s.note : ''}`);
-      else if (s.note && s.note.trim()) noteLines.push(`  [NOTE] ${item.label} — ${section.title}\n         → ${s.note}`);
+      if (s.failed) fails.push(`  [FAIL] ${item.label}\n         Section: ${sec.title}${s.note?'\n         Note: '+s.note:''}`);
+      else if (s.note?.trim()) notes.push(`  [NOTE] ${item.label}\n         ${s.note}`);
     });
-    const sn = currentChecks['snote-' + section.id];
-    if (sn && sn.trim()) noteLines.push(`  [NOTE] ${section.title} (section)\n         → ${sn}`);
+    const sn = currentChecks['snote-'+sec.id];
+    if (sn?.trim()) notes.push(`  [NOTE] ${sec.title} (section)\n         ${sn}`);
   });
 
-  if (failLines.length) { txt += `FAILURES (${failLines.length})\n${failLines.join('\n')}\n\n`; }
-  else { txt += `No failures recorded ✓\n\n`; }
-  if (noteLines.length) { txt += `NOTES (${noteLines.length})\n${noteLines.join('\n')}\n`; }
+  out += fails.length ? `FAILURES (${fails.length})\n${fails.join('\n')}\n\n` : `No failures recorded ✓\n\n`;
+  if (notes.length) out += `NOTES (${notes.length})\n${notes.join('\n')}\n`;
 
-  navigator.clipboard.writeText(txt).then(() => toast('Report copied to clipboard ✓', 'ok')).catch(() => {
-    // fallback: show in alert
-    prompt('Copy report:', txt);
-  });
+  navigator.clipboard.writeText(out)
+    .then(()  => toast('Report copied to clipboard ✓', 'ok'))
+    .catch(()  => { prompt('Copy report:', out); });
 }
 
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
 // SETTINGS
-// ═══════════════════════════════════════════════
-async function saveSettings() {
-  const key = document.getElementById('settingsApiKey').value.trim();
-  if (key) cfg.apiKey = key;
-  const wsId = document.getElementById('settingsWorkspace').value;
-  const spId = document.getElementById('settingsSpace').value;
-  if (wsId) cfg.workspaceId = wsId;
-  if (spId) cfg.spaceId = spId;
-  saveCfg();
-  updateApiStatus(true);
-  toast('Settings saved ✓', 'ok');
-  showPage('dashboard');
+// ══════════════════════════════════════════
+function saveSettings() {
+  const url = document.getElementById('setUrl').value.trim();
+  const key = document.getElementById('setKey').value.trim();
+  if (url) localStorage.setItem('rs_sb_url', url);
+  if (key) localStorage.setItem('rs_sb_key', key);
+  document.getElementById('setStatus').textContent = 'Saved — reloading dashboard…';
+  setTimeout(() => { goPage('dash'); document.getElementById('setStatus').textContent = ''; }, 800);
 }
-
-function clearAll() {
-  if (!confirm('Clear all local data (API key + settings)? Checklists in ClickUp are not affected.')) return;
-  localStorage.removeItem('rs-qa-cfg');
+function clearSettings() {
+  if (!confirm('Reset to default credentials?')) return;
+  localStorage.removeItem('rs_sb_url');
+  localStorage.removeItem('rs_sb_key');
   location.reload();
 }
 
-// ═══════════════════════════════════════════════
-// API STATUS
-// ═══════════════════════════════════════════════
-function updateApiStatus(ok) {
-  document.getElementById('apiDot').className = 'api-dot ' + (ok ? 'ok' : 'err');
-  document.getElementById('apiStatusText').textContent = ok
-    ? (cfg.spaceName || 'Connected')
-    : 'Not connected';
+// ══════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 }
-
-// ═══════════════════════════════════════════════
-// HELPERS
-// ═══════════════════════════════════════════════
-function esc(str) { return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
-function showError(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.style.display='block'; }
-function hideEl(id) { document.getElementById(id).style.display='none'; }
-function showLoader(msg) { document.getElementById('loaderText').textContent=msg||'Loading…'; document.getElementById('loaderOverlay').style.display='flex'; }
-function hideLoader() { document.getElementById('loaderOverlay').style.display='none'; }
-
-function toast(msg, type='') {
+function toast(msg, type='inf') {
   const el = document.getElementById('toast');
   el.textContent = msg;
-  el.className = 'toast show ' + type;
-  setTimeout(() => el.className='toast', 2800);
+  el.className = `toast on ${type}`;
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.className = 'toast', 2800);
+}
+function showLoader(msg) {
+  document.getElementById('loaderTxt').textContent = msg || 'Loading…';
+  document.getElementById('loader').classList.add('on');
+}
+function hideLoader() {
+  document.getElementById('loader').classList.remove('on');
+}
+function setConn(ok) {
+  document.getElementById('connDot').className   = 'dot ' + (ok?'ok':'');
+  document.getElementById('connLabel').textContent = ok ? 'Connected' : 'Not connected';
 }
 
-// Close modal on backdrop click
-document.getElementById('newModal').addEventListener('click', function(e) {
+// Modal backdrop close
+document.getElementById('newOverlay').addEventListener('click', function(e) {
   if (e.target === this) closeNewModal();
 });
 
-// Enter key in new modal
-document.getElementById('newName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('newUrl').focus(); });
-document.getElementById('newUrl').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('newChecker').focus(); });
-document.getElementById('newChecker').addEventListener('keydown', e => { if(e.key==='Enter') createChecklist(); });
+// Enter key shortcuts in modal
+document.getElementById('nName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('nUrl').focus(); });
+document.getElementById('nUrl').addEventListener('keydown',  e => { if(e.key==='Enter') document.getElementById('nChecker').focus(); });
+document.getElementById('nChecker').addEventListener('keydown', e => { if(e.key==='Enter') createChecklist(); });
 
-// ═══════════════════════════════════════════════
+// ══════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════════
-function init() {
-  loadCfg();
-  if (cfg.apiKey && cfg.spaceId) {
-    updateApiStatus(true);
-    showPage('dashboard');
-  }
-  // Prefill settings page
-  if (cfg.apiKey) document.getElementById('settingsApiKey').value = cfg.apiKey;
-}
+// ══════════════════════════════════════════
+// Pre-fill settings page with current values
+document.getElementById('setUrl').value = getCfg().url;
+document.getElementById('setKey').value = getCfg().key;
 
-init();
+// Boot
+loadDash();
 </script>
 </body>
 </html>
