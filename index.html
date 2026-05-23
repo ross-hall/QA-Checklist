@@ -7,620 +7,231 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
 <style>
-/* ── TOKENS ── */
 :root {
-  --navy:       #040e6b;
-  --navy-mid:   #0b1c9e;
-  --navy-glow:  rgba(4,14,107,0.12);
-  --accent:     #e8ff47;
-  --accent-dk:  #c8de00;
-  --red:        #f03a3a;
-  --red-bg:     #fff2f2;
-  --green:      #00c472;
-  --green-bg:   #eafff5;
-  --amber:      #f59e0b;
-  --amber-bg:   #fffbeb;
-  --bg:         #efede6;
-  --bg2:        #e8e6de;
-  --surface:    #fafaf7;
-  --surface2:   #f3f2ec;
-  --border:     #dddad0;
-  --text:       #0f0f22;
-  --muted:      #868696;
-  --mono:       'DM Mono', monospace;
-  --serif:      'Fraunces', serif;
-  --r:          7px;
-  --sh:         0 1px 3px rgba(4,14,107,0.07), 0 4px 16px rgba(4,14,107,0.07);
-  --sh-lg:      0 2px 8px rgba(4,14,107,0.1), 0 12px 40px rgba(4,14,107,0.12);
+  --navy:#040e6b; --navy-mid:#0b1c9e;
+  --accent:#e8ff47; --accent-dk:#c8de00;
+  --red:#f03a3a; --red-bg:#fff2f2;
+  --green:#00c472; --green-bg:#eafff5;
+  --amber:#f59e0b; --amber-bg:#fffbeb;
+  --bg:#efede6; --surface:#fafaf7; --surface2:#f3f2ec;
+  --border:#dddad0; --text:#0f0f22; --muted:#868696;
+  --mono:'DM Mono',monospace; --serif:'Fraunces',serif;
+  --r:7px;
+  --sh:0 1px 3px rgba(4,14,107,.07),0 4px 16px rgba(4,14,107,.07);
+  --sh-lg:0 2px 8px rgba(4,14,107,.1),0 12px 40px rgba(4,14,107,.12);
 }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--mono);font-size:13px;background:var(--bg);color:var(--text);min-height:100vh}
+.app{display:flex;min-height:100vh}
 
-*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-html { scroll-behavior:smooth; }
-body {
-  font-family: var(--mono);
-  font-size: 13px;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:var(--navy);position:fixed;inset:0 auto 0 0;display:flex;flex-direction:column;z-index:100}
+.sb-logo{padding:22px 18px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-wordmark{font-family:var(--serif);font-size:17px;font-weight:600;color:#fff;letter-spacing:-.02em;line-height:1}
+.sb-wordmark em{color:var(--accent);font-style:normal}
+.sb-sub{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.1em;text-transform:uppercase;margin-top:5px}
+.sb-nav{flex:1;padding:10px 0;overflow-y:auto}
+.sb-lbl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);padding:12px 18px 5px}
+.sb-item{display:flex;align-items:center;gap:9px;padding:8px 18px;font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;border-left:2px solid transparent;transition:all .14s}
+.sb-item:hover{color:#fff;background:rgba(255,255,255,.05)}
+.sb-item.active{color:var(--accent);border-left-color:var(--accent);background:rgba(232,255,71,.05)}
+.sb-item .si{font-size:14px;width:18px;text-align:center;flex-shrink:0}
+.sb-foot{padding:14px 18px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px;font-size:11px;color:rgba(255,255,255,.35)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0;transition:background .3s,box-shadow .3s}
+.dot.ok{background:var(--green);box-shadow:0 0 7px var(--green)}
 
-/* ── LAYOUT ── */
-.app { display:flex; min-height:100vh; }
+/* MAIN */
+.main{margin-left:220px;flex:1;min-width:0}
 
-/* ── SIDEBAR ── */
-.sidebar {
-  width: 220px;
-  flex-shrink: 0;
-  background: var(--navy);
-  position: fixed;
-  inset: 0 auto 0 0;
-  display: flex;
-  flex-direction: column;
-  z-index: 100;
-}
+/* TOPBAR */
+.topbar{height:54px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;gap:14px;position:sticky;top:0;z-index:50}
+.topbar-title{font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:-.02em;color:var(--navy)}
+.topbar-right{display:flex;gap:8px;align-items:center}
 
-.sb-logo {
-  padding: 22px 18px 18px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-.sb-wordmark {
-  font-family: var(--serif);
-  font-size: 17px;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: -0.02em;
-  line-height: 1;
-}
-.sb-wordmark em { color: var(--accent); font-style: normal; }
-.sb-sub {
-  font-size: 10px;
-  color: rgba(255,255,255,0.3);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-top: 5px;
-}
+/* BUTTONS */
+.btn{font-family:var(--mono);font-size:11px;font-weight:500;padding:7px 15px;border-radius:var(--r);border:none;cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:all .14s;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn:disabled{opacity:.4;pointer-events:none}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy-mid)}
+.btn-accent{background:var(--accent);color:var(--navy);font-weight:600}
+.btn-accent:hover{background:var(--accent-dk)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--text)}
+.btn-red{background:transparent;color:var(--red);border:1px solid #fcc}
+.btn-red:hover{background:var(--red-bg)}
+.btn-sm{padding:4px 10px;font-size:10px}
 
-.sb-nav { flex:1; padding: 10px 0; overflow-y:auto; }
+/* PAGES */
+.page{display:none}
+.page.on{display:block}
 
-.sb-section-label {
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.25);
-  padding: 12px 18px 5px;
-}
-
-.sb-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  padding: 8px 18px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.5);
-  cursor: pointer;
-  border-left: 2px solid transparent;
-  transition: all 0.14s;
-}
-.sb-item:hover { color:#fff; background:rgba(255,255,255,0.05); }
-.sb-item.active { color:var(--accent); border-left-color:var(--accent); background:rgba(232,255,71,0.05); }
-.sb-item .si { font-size:14px; width:18px; text-align:center; flex-shrink:0; }
-
-.sb-foot {
-  padding: 14px 18px;
-  border-top: 1px solid rgba(255,255,255,0.07);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  color: rgba(255,255,255,0.35);
-}
-.dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--muted);
-  flex-shrink: 0;
-  transition: background 0.3s, box-shadow 0.3s;
-}
-.dot.ok { background:var(--green); box-shadow: 0 0 7px var(--green); }
-
-/* ── MAIN ── */
-.main { margin-left:220px; flex:1; min-width:0; }
-
-/* ── TOPBAR ── */
-.topbar {
-  height: 54px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 28px;
-  gap: 14px;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
-.topbar-title {
-  font-family: var(--serif);
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--navy);
-}
-.topbar-right { display:flex; gap:8px; align-items:center; }
-
-/* ── BUTTONS ── */
-.btn {
-  font-family: var(--mono);
-  font-size: 11px;
-  font-weight: 500;
-  padding: 7px 15px;
-  border-radius: var(--r);
-  border: none;
-  cursor: pointer;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  transition: all 0.14s;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-}
-.btn:disabled { opacity:0.4; pointer-events:none; }
-.btn-navy  { background:var(--navy); color:#fff; }
-.btn-navy:hover { background:var(--navy-mid); }
-.btn-accent { background:var(--accent); color:var(--navy); font-weight:600; }
-.btn-accent:hover { background:var(--accent-dk); }
-.btn-ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
-.btn-ghost:hover { color:var(--text); border-color:var(--text); }
-.btn-red { background:transparent; color:var(--red); border:1px solid #fcc; }
-.btn-red:hover { background:var(--red-bg); }
-
-/* ── PAGES ── */
-.page { display:none; }
-.page.on { display:block; }
-
-/* ── DASHBOARD ── */
-.dash-body { padding:26px 28px 60px; }
-
-.stats-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 26px;
-  flex-wrap: wrap;
-}
-.stat {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 14px 18px;
-  flex: 1;
-  min-width: 100px;
-  box-shadow: var(--sh);
-}
-.stat-n {
-  font-family: var(--serif);
-  font-size: 30px;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1;
-  color: var(--navy);
-}
-.stat-l { font-size: 10px; color:var(--muted); margin-top:4px; letter-spacing:0.03em; }
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px,1fr));
-  gap: 12px;
-}
+/* DASHBOARD */
+.dash-body{padding:26px 28px 60px}
+.stats-row{display:flex;gap:10px;margin-bottom:26px;flex-wrap:wrap}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:14px 18px;flex:1;min-width:100px;box-shadow:var(--sh)}
+.stat-n{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:-.04em;line-height:1;color:var(--navy)}
+.stat-l{font-size:10px;color:var(--muted);margin-top:4px;letter-spacing:.03em}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
 
 /* CARD */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  box-shadow: var(--sh);
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
-  position: relative;
-}
-.card:hover { transform:translateY(-2px); box-shadow:var(--sh-lg); border-color:rgba(4,14,107,0.3); }
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s}
+.card:hover{transform:translateY(-2px);box-shadow:var(--sh-lg);border-color:rgba(4,14,107,.3)}
+.card-bar{height:3px}
+.bar-todo{background:var(--border)} .bar-low{background:var(--red)} .bar-mid{background:var(--amber)} .bar-high{background:var(--green)} .bar-done{background:var(--navy)}
+.card-body{padding:15px 16px}
+.card-name{font-family:var(--serif);font-size:14px;font-weight:600;letter-spacing:-.02em;margin-bottom:3px;color:var(--text)}
+.card-url{font-size:11px;color:var(--muted);margin-bottom:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-foot{display:flex;align-items:flex-end;justify-content:space-between}
+.card-pct{font-family:var(--serif);font-size:24px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.card-meta{font-size:10px;color:var(--muted);text-align:right;line-height:1.5}
+.chips{display:flex;gap:4px;margin-top:9px;flex-wrap:wrap}
+.chip{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:500;letter-spacing:.02em}
+.chip-red{background:var(--red-bg);color:var(--red)}
+.chip-green{background:var(--green-bg);color:#007a47}
+.chip-navy{background:rgba(4,14,107,.08);color:var(--navy)}
+.empty{grid-column:1/-1;text-align:center;padding:60px 24px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:16px}
+.empty h3{font-family:var(--serif);font-size:20px;font-weight:300;font-style:italic;color:var(--text);margin-bottom:8px}
+.empty p{font-size:12px;max-width:280px;margin:0 auto 20px;line-height:1.6}
 
-.card-bar { height:3px; }
-.bar-todo  { background: var(--border); }
-.bar-low   { background: var(--red); }
-.bar-mid   { background: var(--amber); }
-.bar-high  { background: var(--green); }
-.bar-done  { background: var(--navy); }
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(4,14,107,.3);backdrop-filter:blur(5px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.on{display:flex}
+.modal{background:var(--surface);border-radius:12px;box-shadow:var(--sh-lg);width:100%;max-width:460px;overflow:hidden;animation:popIn .2s cubic-bezier(.34,1.56,.64,1)}
+@keyframes popIn{from{transform:scale(.94) translateY(10px);opacity:0}to{transform:none;opacity:1}}
+.modal-hd{background:var(--navy);border-bottom:3px solid var(--accent);padding:22px 26px}
+.modal-hd h2{font-family:var(--serif);font-size:20px;font-weight:300;font-style:italic;color:#fff;letter-spacing:-.02em}
+.modal-hd p{font-size:11px;color:rgba(255,255,255,.4);margin-top:4px}
+.modal-bd{padding:22px 26px}
+.modal-ft{padding:0 26px 22px;display:flex;gap:8px;justify-content:flex-end}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.field input,.field textarea{width:100%;font-family:var(--mono);font-size:13px;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);outline:none;transition:border-color .15s}
+.field input:focus,.field textarea:focus{border-color:var(--navy)}
+.field textarea{resize:vertical;min-height:60px}
 
-.card-body { padding:15px 16px; }
-.card-name {
-  font-family: var(--serif);
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin-bottom: 3px;
-  color: var(--text);
-}
-.card-url {
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 12px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.card-foot {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-}
-.card-pct {
-  font-family: var(--serif);
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.04em;
-  line-height: 1;
-}
-.card-meta { font-size:10px; color:var(--muted); text-align:right; line-height:1.5; }
+/* CHECKLIST VIEW */
+.cl-topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 28px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.cl-back{font-size:12px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:5px;transition:color .14s;flex-shrink:0}
+.cl-back:hover{color:var(--navy)}
+.cl-info{flex:1;min-width:0}
+.cl-name{font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:-.02em;color:var(--navy)}
+.cl-url{font-size:11px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prog-track{height:3px;background:var(--border)}
+.prog-fill{height:100%;background:var(--accent);transition:width .35s ease}
+.cl-body{max-width:780px;margin:0 auto;padding:24px 28px 72px}
+.sec{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:var(--sh)}
+.sec-hd{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none;transition:background .12s}
+.sec-hd:hover{background:var(--surface2)}
+.sec.open .sec-hd{border-bottom:1px solid var(--border)}
+.sec-icon{font-size:14px;flex-shrink:0;width:20px;text-align:center}
+.sec-title{font-family:var(--serif);font-size:14px;font-weight:600;flex:1;letter-spacing:-.01em}
+.sec-cnt{font-size:11px;color:var(--muted)}
+.sec-chev{font-size:9px;color:var(--muted);transition:transform .2s}
+.sec.open .sec-chev{transform:rotate(180deg)}
+.sec-bd{display:none}
+.sec.open .sec-bd{display:block}
+.item{display:grid;grid-template-columns:20px 1fr auto;gap:11px;align-items:start;padding:10px 16px;border-bottom:1px solid #eeede6;transition:background .1s}
+.item:last-of-type{border-bottom:none}
+.item:hover{background:var(--surface2)}
+.chk{width:17px;height:17px;border-radius:4px;border:1.5px solid var(--border);cursor:pointer;appearance:none;margin-top:2px;position:relative;transition:all .14s;background:#fff;flex-shrink:0}
+.chk:checked{background:var(--navy);border-color:var(--navy)}
+.chk:checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:9px;font-weight:700}
+.chk.fail{background:var(--red);border-color:var(--red)}
+.chk.fail::after{content:'✕';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#fff;font-size:9px;font-weight:700}
+.chk:disabled{opacity:.3;cursor:not-allowed}
+.item-lbl strong{display:block;font-weight:500;font-size:12.5px;margin-bottom:2px;line-height:1.3}
+.item-lbl small{color:var(--muted);font-size:11px;line-height:1.4}
+.item-note-preview{font-size:11px;color:var(--amber);margin-top:3px;font-style:italic}
+.item-acts{display:flex;gap:3px;flex-shrink:0}
+.act{background:none;border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-family:var(--mono);font-size:10px;cursor:pointer;color:var(--muted);transition:all .13s;white-space:nowrap}
+.act:hover{border-color:var(--navy);color:var(--navy)}
+.act.on-fail{background:var(--red-bg);border-color:#fbb;color:var(--red)}
+.act.on-na{background:var(--surface2);color:var(--muted)}
+.note-row{padding:7px 16px 9px 47px;background:var(--surface2);border-bottom:1px solid #eeede6}
+.note-row input{width:100%;font-family:var(--mono);font-size:11px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--text);outline:none}
+.note-row input:focus{border-color:var(--navy)}
+.sec-notes{padding:9px 16px 11px;background:var(--surface2);border-top:1px solid var(--border);display:flex;align-items:center;gap:9px}
+.sec-notes label{font-size:11px;color:var(--muted);flex-shrink:0}
+.sec-notes input{flex:1;font-family:var(--mono);font-size:11px;padding:5px 9px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--text);outline:none}
+.sec-notes input:focus{border-color:var(--navy)}
 
-.chips { display:flex; gap:4px; margin-top:9px; flex-wrap:wrap; }
-.chip {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 100px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-.chip-red   { background:var(--red-bg);   color:var(--red); }
-.chip-green { background:var(--green-bg); color:#007a47; }
-.chip-navy  { background:rgba(4,14,107,0.08); color:var(--navy); }
-.chip-amber { background:var(--amber-bg); color:#8a5c00; }
+/* SETTINGS */
+.settings-body{padding:28px;max-width:680px}
+.settings-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:20px;overflow:hidden}
+.settings-panel-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.settings-panel-hd h3{font-family:var(--serif);font-size:15px;font-weight:600;letter-spacing:-.01em}
+.settings-panel-hd p{font-size:11px;color:var(--muted);margin-top:2px}
+.settings-panel-bd{padding:18px 20px}
 
-.empty {
-  grid-column: 1/-1;
-  text-align: center;
-  padding: 60px 24px;
-  color: var(--muted);
-}
-.empty-icon { font-size:40px; margin-bottom:16px; }
-.empty h3 { font-family:var(--serif); font-size:20px; font-weight:300; font-style:italic; color:var(--text); margin-bottom:8px; }
-.empty p { font-size:12px; max-width:280px; margin:0 auto 20px; line-height:1.6; }
+/* TEMPLATE EDITOR */
+.tpl-category{border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;background:var(--surface2)}
+.tpl-cat-hd{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--surface);border-bottom:1px solid var(--border)}
+.tpl-cat-icon{font-size:16px;cursor:pointer}
+.tpl-cat-name{flex:1;font-family:var(--serif);font-size:13px;font-weight:600;background:none;border:none;outline:none;color:var(--text);cursor:text;padding:2px 4px;border-radius:4px;transition:background .12s}
+.tpl-cat-name:hover,.tpl-cat-name:focus{background:var(--surface2)}
+.tpl-cat-actions{display:flex;gap:4px}
+.tpl-items{padding:8px 10px}
+.tpl-item-row{display:flex;align-items:center;gap:7px;padding:5px 6px;border-radius:4px;transition:background .1s}
+.tpl-item-row:hover{background:rgba(4,14,107,.04)}
+.tpl-item-handle{color:var(--muted);font-size:11px;cursor:grab;flex-shrink:0;user-select:none}
+.tpl-item-label{flex:1;font-size:12px;background:none;border:none;outline:none;color:var(--text);padding:3px 5px;border-radius:4px;transition:background .12s;font-family:var(--mono)}
+.tpl-item-label:hover,.tpl-item-label:focus{background:var(--surface)}
+.tpl-item-detail{font-size:11px;color:var(--muted);background:none;border:none;outline:none;padding:2px 5px;border-radius:4px;font-family:var(--mono);width:180px;transition:background .12s}
+.tpl-item-detail:hover,.tpl-item-detail:focus{background:var(--surface)}
+.tpl-item-del{background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:2px 4px;border-radius:3px;transition:color .12s;line-height:1}
+.tpl-item-del:hover{color:var(--red)}
+.tpl-add-item{display:flex;align-items:center;gap:6px;padding:6px 6px 8px;font-size:11px;color:var(--muted);cursor:pointer;transition:color .12s}
+.tpl-add-item:hover{color:var(--navy)}
 
-/* ── MODAL ── */
-.overlay {
-  position: fixed; inset:0;
-  background: rgba(4,14,107,0.3);
-  backdrop-filter: blur(5px);
-  z-index: 200;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.overlay.on { display:flex; }
+/* SAVE PILL */
+.save-pill{position:fixed;bottom:22px;right:26px;font-size:11px;padding:8px 16px;border-radius:100px;display:flex;align-items:center;gap:7px;box-shadow:var(--sh-lg);opacity:0;transform:translateY(6px);transition:all .25s;pointer-events:none;z-index:80}
+.save-pill.show{opacity:1;transform:none}
+.save-pill.saving{background:var(--navy);color:#fff}
+.save-pill.ok{background:var(--green);color:#fff}
+.save-pill.err{background:var(--red);color:#fff}
+.spin{width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.modal {
-  background: var(--surface);
-  border-radius: 12px;
-  box-shadow: var(--sh-lg);
-  width: 100%;
-  max-width: 460px;
-  overflow: hidden;
-  animation: popIn 0.2s cubic-bezier(0.34,1.56,0.64,1);
-}
-@keyframes popIn {
-  from { transform:scale(0.94) translateY(10px); opacity:0; }
-  to   { transform:none; opacity:1; }
-}
+/* TOAST */
+.toast{position:fixed;top:18px;right:22px;font-size:12px;padding:9px 16px;border-radius:var(--r);box-shadow:var(--sh-lg);z-index:500;opacity:0;transform:translateY(-5px);transition:all .22s;pointer-events:none}
+.toast.on{opacity:1;transform:none}
+.toast.ok{background:var(--green);color:#fff}
+.toast.err{background:var(--red);color:#fff}
+.toast.inf{background:var(--navy);color:#fff}
 
-.modal-hd {
-  background: var(--navy);
-  border-bottom: 3px solid var(--accent);
-  padding: 22px 26px;
-}
-.modal-hd h2 {
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 300;
-  font-style: italic;
-  color: #fff;
-  letter-spacing: -0.02em;
-}
-.modal-hd p { font-size:11px; color:rgba(255,255,255,0.4); margin-top:4px; }
-.modal-bd { padding:22px 26px; }
-.modal-ft { padding:0 26px 22px; display:flex; gap:8px; justify-content:flex-end; }
+/* LOADER */
+.loader{position:fixed;inset:0;background:rgba(239,237,230,.85);backdrop-filter:blur(4px);z-index:400;display:none;flex-direction:column;align-items:center;justify-content:center;gap:13px;font-size:12px;color:var(--muted)}
+.loader.on{display:flex}
+.big-spin{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--navy);border-radius:50%;animation:spin .75s linear infinite}
 
-.field { margin-bottom:16px; }
-.field label {
-  display:block;
-  font-size:10px;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-bottom:7px;
-}
-.field input {
-  width:100%;
-  font-family:var(--mono);
-  font-size:13px;
-  padding:9px 12px;
-  border:1.5px solid var(--border);
-  border-radius:var(--r);
-  background:var(--surface);
-  color:var(--text);
-  outline:none;
-  transition:border-color 0.15s;
-}
-.field input:focus { border-color:var(--navy); }
-
-/* ── CHECKLIST VIEW ── */
-.cl-topbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 28px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-.cl-back {
-  font-size: 12px;
-  color: var(--muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  transition: color 0.14s;
-  flex-shrink: 0;
-}
-.cl-back:hover { color:var(--navy); }
-.cl-info { flex:1; min-width:0; }
-.cl-name { font-family:var(--serif); font-size:16px; font-weight:600; letter-spacing:-0.02em; color:var(--navy); }
-.cl-url  { font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-
-.prog-track { height:3px; background:var(--border); }
-.prog-fill  { height:100%; background:var(--accent); transition:width 0.35s ease; }
-
-.cl-body { max-width:780px; margin:0 auto; padding:24px 28px 72px; }
-
-/* CHECKLIST SECTIONS */
-.sec {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  margin-bottom: 10px;
-  overflow: hidden;
-  box-shadow: var(--sh);
-}
-.sec-hd {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.12s;
-}
-.sec-hd:hover { background:var(--surface2); }
-.sec.open .sec-hd { border-bottom:1px solid var(--border); }
-.sec-icon { font-size:14px; flex-shrink:0; width:20px; text-align:center; }
-.sec-title { font-family:var(--serif); font-size:14px; font-weight:600; flex:1; letter-spacing:-0.01em; }
-.sec-cnt  { font-size:11px; color:var(--muted); }
-.sec-chev { font-size:9px; color:var(--muted); transition:transform 0.2s; }
-.sec.open .sec-chev { transform:rotate(180deg); }
-.sec-bd { display:none; }
-.sec.open .sec-bd { display:block; }
-
-/* ITEMS */
-.item {
-  display: grid;
-  grid-template-columns: 20px 1fr auto;
-  gap: 11px;
-  align-items: start;
-  padding: 10px 16px;
-  border-bottom: 1px solid #eeede6;
-  transition: background 0.1s;
-}
-.item:last-of-type { border-bottom:none; }
-.item:hover { background:var(--surface2); }
-
-.chk {
-  width:17px; height:17px;
-  border-radius:4px;
-  border:1.5px solid var(--border);
-  cursor:pointer;
-  appearance:none;
-  margin-top:2px;
-  position:relative;
-  transition:all 0.14s;
-  background:#fff;
-  flex-shrink:0;
-}
-.chk:checked { background:var(--navy); border-color:var(--navy); }
-.chk:checked::after { content:'✓'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:9px; font-weight:700; }
-.chk.fail { background:var(--red); border-color:var(--red); }
-.chk.fail::after { content:'✕'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:9px; font-weight:700; }
-.chk:disabled { opacity:0.3; cursor:not-allowed; }
-
-.item-lbl strong { display:block; font-weight:500; font-size:12.5px; margin-bottom:2px; line-height:1.3; }
-.item-lbl small  { color:var(--muted); font-size:11px; line-height:1.4; }
-.item-note-preview { font-size:11px; color:var(--amber); margin-top:3px; font-style:italic; }
-
-.item-acts { display:flex; gap:3px; flex-shrink:0; }
-.act {
-  background:none;
-  border:1px solid var(--border);
-  border-radius:4px;
-  padding:3px 7px;
-  font-family:var(--mono);
-  font-size:10px;
-  cursor:pointer;
-  color:var(--muted);
-  transition:all 0.13s;
-  white-space:nowrap;
-}
-.act:hover { border-color:var(--navy); color:var(--navy); }
-.act.on-fail { background:var(--red-bg); border-color:#fbb; color:var(--red); }
-.act.on-na   { background:var(--surface2); color:var(--muted); }
-
-.note-row {
-  padding: 7px 16px 9px 47px;
-  background: var(--surface2);
-  border-bottom: 1px solid #eeede6;
-}
-.note-row input {
-  width:100%;
-  font-family:var(--mono);
-  font-size:11px;
-  padding:5px 9px;
-  border:1px solid var(--border);
-  border-radius:4px;
-  background:#fff;
-  color:var(--text);
-  outline:none;
-  transition:border-color 0.14s;
-}
-.note-row input:focus { border-color:var(--navy); }
-
-.sec-notes {
-  padding: 9px 16px 11px;
-  background: var(--surface2);
-  border-top: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-.sec-notes label { font-size:11px; color:var(--muted); flex-shrink:0; }
-.sec-notes input {
-  flex:1;
-  font-family:var(--mono);
-  font-size:11px;
-  padding:5px 9px;
-  border:1px solid var(--border);
-  border-radius:4px;
-  background:#fff;
-  color:var(--text);
-  outline:none;
-}
-.sec-notes input:focus { border-color:var(--navy); }
-
-/* ── SAVE PILL ── */
-.save-pill {
-  position: fixed;
-  bottom: 22px; right: 26px;
-  font-size: 11px;
-  padding: 8px 16px;
-  border-radius: 100px;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  box-shadow: var(--sh-lg);
-  opacity: 0;
-  transform: translateY(6px);
-  transition: all 0.25s;
-  pointer-events: none;
-  z-index: 80;
-}
-.save-pill.show { opacity:1; transform:none; }
-.save-pill.saving { background:var(--navy); color:#fff; }
-.save-pill.ok     { background:var(--green); color:#fff; }
-.save-pill.err    { background:var(--red); color:#fff; }
-
-.spin {
-  width:13px; height:13px;
-  border:2px solid rgba(255,255,255,0.3);
-  border-top-color:#fff;
-  border-radius:50%;
-  animation:spin 0.65s linear infinite;
-  flex-shrink:0;
-}
-@keyframes spin { to { transform:rotate(360deg); } }
-
-/* ── TOAST ── */
-.toast {
-  position:fixed; top:18px; right:22px;
-  font-size:12px; padding:9px 16px;
-  border-radius:var(--r);
-  box-shadow:var(--sh-lg);
-  z-index:500;
-  opacity:0; transform:translateY(-5px);
-  transition:all 0.22s;
-  pointer-events:none;
-}
-.toast.on { opacity:1; transform:none; }
-.toast.ok  { background:var(--green); color:#fff; }
-.toast.err { background:var(--red); color:#fff; }
-.toast.inf { background:var(--navy); color:#fff; }
-
-/* ── LOADER ── */
-.loader {
-  position:fixed; inset:0;
-  background:rgba(239,237,230,0.8);
-  backdrop-filter:blur(4px);
-  z-index:400;
-  display:none;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:13px;
-  font-size:12px;
-  color:var(--muted);
-}
-.loader.on { display:flex; }
-.big-spin {
-  width:32px; height:32px;
-  border:3px solid var(--border);
-  border-top-color:var(--navy);
-  border-radius:50%;
-  animation:spin 0.75s linear infinite;
-}
-
-/* ── CONFIRM DIALOG ── */
-.confirm-box {
-  background:var(--red-bg);
-  border:1px solid #fcc;
-  border-radius:var(--r);
-  padding:10px 14px;
-  display:none;
-  align-items:center;
-  gap:10px;
-  margin-top:8px;
-  font-size:12px;
-}
-.confirm-box.on { display:flex; }
+/* CONFIRM */
+.confirm-box{background:var(--red-bg);border:1px solid #fcc;border-radius:var(--r);padding:10px 14px;display:none;align-items:center;gap:10px;margin-top:8px;font-size:12px}
+.confirm-box.on{display:flex}
 
 @media(max-width:640px){
-  .sidebar { display:none; }
-  .main { margin-left:0; }
-  .item { grid-template-columns: 20px 1fr; }
-  .item-acts { grid-column:2; }
+  .sidebar{display:none} .main{margin-left:0}
+  .item{grid-template-columns:20px 1fr} .item-acts{grid-column:2}
+  .tpl-item-detail{display:none}
 }
 </style>
 </head>
 <body>
-
 <div class="app">
 
-<!-- ── SIDEBAR ── -->
+<!-- SIDEBAR -->
 <aside class="sidebar">
   <div class="sb-logo">
     <div class="sb-wordmark">Reciprocal<em>.</em>Space</div>
     <div class="sb-sub">QA Dashboard</div>
   </div>
   <nav class="sb-nav">
-    <div class="sb-section-label">Views</div>
-    <div class="sb-item active" id="nav-dash" onclick="goPage('dash')">
-      <span class="si">⊞</span> Dashboard
-    </div>
-    <div class="sb-item" onclick="openNewModal()">
-      <span class="si">＋</span> New Checklist
-    </div>
-    <div class="sb-section-label">Account</div>
-    <div class="sb-item" id="nav-settings" onclick="goPage('settings')">
-      <span class="si">⚙</span> Settings
-    </div>
+    <div class="sb-lbl">Views</div>
+    <div class="sb-item active" id="nav-dash" onclick="goPage('dash')"><span class="si">⊞</span> Dashboard</div>
+    <div class="sb-item" onclick="openNewModal()"><span class="si">＋</span> New Checklist</div>
+    <div class="sb-lbl">Config</div>
+    <div class="sb-item" id="nav-settings" onclick="goPage('settings')"><span class="si">⚙</span> Settings</div>
   </nav>
   <div class="sb-foot">
     <div class="dot" id="connDot"></div>
@@ -628,7 +239,7 @@ body {
   </div>
 </aside>
 
-<!-- ── MAIN ── -->
+<!-- MAIN -->
 <main class="main">
 
   <!-- DASHBOARD -->
@@ -643,10 +254,7 @@ body {
     <div class="dash-body">
       <div class="stats-row" id="statsRow"></div>
       <div class="grid" id="grid">
-        <div class="empty">
-          <div class="big-spin" style="margin:0 auto 14px;"></div>
-          <p>Loading from Supabase…</p>
-        </div>
+        <div class="empty"><div class="big-spin" style="margin:0 auto 14px"></div><p>Loading…</p></div>
       </div>
     </div>
   </div>
@@ -657,27 +265,22 @@ body {
       <div class="cl-back" onclick="goPage('dash')">← Back</div>
       <div class="cl-info">
         <div class="cl-name" id="clName">—</div>
-        <div class="cl-url"  id="clUrl">—</div>
+        <div class="cl-url" id="clUrl">—</div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <span style="font-size:11px;color:var(--muted);" id="clChecker"></span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:11px;color:var(--muted)" id="clChecker"></span>
         <button class="btn btn-ghost" onclick="copyReport()">↓ Copy Report</button>
         <button class="btn btn-red" onclick="confirmDelete()">Delete</button>
       </div>
     </div>
     <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
-
-    <!-- summary pills -->
-    <div style="padding:10px 28px 0;display:flex;gap:8px;flex-wrap:wrap;" id="clSummary"></div>
-
+    <div style="padding:10px 28px 0;display:flex;gap:8px;flex-wrap:wrap" id="clSummary"></div>
     <div class="cl-body" id="clBody"></div>
-
-    <!-- delete confirm -->
-    <div style="padding:0 28px;" id="deleteConfirmWrap">
+    <div style="padding:0 28px">
       <div class="confirm-box" id="deleteConfirm">
         <span>Permanently delete this checklist?</span>
-        <button class="btn btn-red" onclick="doDelete()" style="padding:5px 12px;">Yes, delete</button>
-        <button class="btn btn-ghost" onclick="cancelDelete()" style="padding:5px 12px;">Cancel</button>
+        <button class="btn btn-red btn-sm" onclick="doDelete()">Yes, delete</button>
+        <button class="btn btn-ghost btn-sm" onclick="cancelDelete()">Cancel</button>
       </div>
     </div>
   </div>
@@ -687,25 +290,60 @@ body {
     <div class="topbar">
       <div class="topbar-title">Settings</div>
     </div>
-    <div style="padding:28px;max-width:480px;">
-      <div class="sec" style="overflow:visible;">
-        <div style="padding:18px 20px;">
-          <h3 style="font-family:var(--serif);font-size:15px;font-weight:600;margin-bottom:16px;">Supabase Connection</h3>
-          <div class="field">
-            <label>Project URL</label>
-            <input type="text" id="setUrl" placeholder="https://xxxx.supabase.co">
+    <div class="settings-body">
+
+      <!-- Checklist Template -->
+      <div class="settings-panel">
+        <div class="settings-panel-hd">
+          <div>
+            <h3>Checklist Template</h3>
+            <p>Edit the default items used when creating a new checklist. Existing checklists are unaffected.</p>
           </div>
-          <div class="field">
-            <label>Anon / Public Key</label>
-            <input type="text" id="setKey" placeholder="sb_publishable_…">
+          <div style="display:flex;gap:8px;flex-shrink:0">
+            <button class="btn btn-ghost btn-sm" onclick="addCategory()">＋ Category</button>
+            <button class="btn btn-accent btn-sm" id="saveTplBtn" onclick="saveTemplate()">Save Template</button>
           </div>
-          <div style="display:flex;gap:8px;margin-top:4px;">
-            <button class="btn btn-navy" onclick="saveSettings()">Save & Reconnect</button>
-            <button class="btn btn-red" onclick="clearSettings()">Reset</button>
+        </div>
+        <div class="settings-panel-bd">
+          <div id="tplEditor">
+            <div class="empty" style="padding:32px 0"><div class="big-spin" style="margin:0 auto 12px"></div><p>Loading template…</p></div>
           </div>
-          <div id="setStatus" style="margin-top:10px;font-size:11px;color:var(--muted);"></div>
+          <div id="tplStatus" style="margin-top:10px;font-size:11px;color:var(--muted)"></div>
         </div>
       </div>
+
+      <!-- Supabase Connection -->
+      <div class="settings-panel">
+        <div class="settings-panel-hd">
+          <div>
+            <h3>Supabase Connection</h3>
+            <p>Override the baked-in credentials if you move to a different project.</p>
+          </div>
+        </div>
+        <div class="settings-panel-bd">
+          <div class="field"><label>Project URL</label><input type="text" id="setUrl" placeholder="https://xxxx.supabase.co"></div>
+          <div class="field"><label>Anon / Public Key</label><input type="text" id="setKey" placeholder="sb_publishable_…"></div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-navy" onclick="saveSettings()">Save & Reconnect</button>
+            <button class="btn btn-red" onclick="clearSettings()">Reset to Default</button>
+          </div>
+          <div id="setStatus" style="margin-top:10px;font-size:11px;color:var(--muted)"></div>
+        </div>
+      </div>
+
+      <!-- SQL hint -->
+      <div class="settings-panel">
+        <div class="settings-panel-hd"><div><h3>First-time Setup</h3><p>Run this SQL in Supabase if the template editor shows an error.</p></div></div>
+        <div class="settings-panel-bd">
+          <pre style="background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:14px;font-size:11px;line-height:1.6;overflow-x:auto;white-space:pre">create table if not exists templates (
+  id text primary key default 'default',
+  sections jsonb not null default '[]'::jsonb,
+  updated_at timestamptz default now()
+);</pre>
+          <button class="btn btn-ghost btn-sm" style="margin-top:10px" onclick="copySQL()">Copy SQL</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -715,23 +353,11 @@ body {
 <!-- NEW CHECKLIST MODAL -->
 <div class="overlay" id="newOverlay">
   <div class="modal">
-    <div class="modal-hd">
-      <h2>New QA Checklist</h2>
-      <p>Saved instantly to your shared Supabase database.</p>
-    </div>
+    <div class="modal-hd"><h2>New QA Checklist</h2><p>Uses the current template. Saved to your shared database.</p></div>
     <div class="modal-bd">
-      <div class="field">
-        <label>Project / Client Name *</label>
-        <input type="text" id="nName" placeholder="e.g. Exciva Website v2" maxlength="80">
-      </div>
-      <div class="field">
-        <label>Staging URL</label>
-        <input type="url" id="nUrl" placeholder="https://…" maxlength="200">
-      </div>
-      <div class="field">
-        <label>Your Name</label>
-        <input type="text" id="nChecker" placeholder="e.g. Ross" maxlength="40">
-      </div>
+      <div class="field"><label>Project / Client Name *</label><input type="text" id="nName" placeholder="e.g. Exciva Website v2" maxlength="80"></div>
+      <div class="field"><label>Staging URL</label><input type="url" id="nUrl" placeholder="https://…" maxlength="200"></div>
+      <div class="field"><label>Your Name</label><input type="text" id="nChecker" placeholder="e.g. Ross" maxlength="40"></div>
     </div>
     <div class="modal-ft">
       <button class="btn btn-ghost" onclick="closeNewModal()">Cancel</button>
@@ -740,660 +366,589 @@ body {
   </div>
 </div>
 
-<!-- SAVE PILL -->
-<div class="save-pill" id="savePill">
-  <div class="spin" id="saveSpin" style="display:none;"></div>
-  <span id="saveTxt"></span>
+<!-- ICON PICKER MODAL -->
+<div class="overlay" id="iconOverlay">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-hd"><h2>Pick an Icon</h2></div>
+    <div class="modal-bd">
+      <div id="iconGrid" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+    <div class="modal-ft"><button class="btn btn-ghost" onclick="closeIconPicker()">Cancel</button></div>
+  </div>
 </div>
 
-<!-- TOAST -->
+<div class="save-pill" id="savePill"><div class="spin" id="saveSpin" style="display:none"></div><span id="saveTxt"></span></div>
 <div class="toast" id="toast"></div>
-
-<!-- LOADER -->
-<div class="loader" id="loader">
-  <div class="big-spin"></div>
-  <span id="loaderTxt">Loading…</span>
-</div>
+<div class="loader" id="loader"><div class="big-spin"></div><span id="loaderTxt">Loading…</span></div>
 
 <script>
-// ══════════════════════════════════════════
-// CONFIG — baked in, no setup required
-// ══════════════════════════════════════════
+// ── CONFIG ──────────────────────────────────────
 const DEFAULT_URL = 'https://dhxvwspdhqpizkrrjign.supabase.co';
 const DEFAULT_KEY = 'sb_publishable_bYlVcPXyzi8BpJXpt9oMzA_S1JHfD5X';
+function getCfg(){ return { url: localStorage.getItem('rs_sb_url')||DEFAULT_URL, key: localStorage.getItem('rs_sb_key')||DEFAULT_KEY }; }
 
-function getCfg() {
-  return {
-    url: localStorage.getItem('rs_sb_url') || DEFAULT_URL,
-    key: localStorage.getItem('rs_sb_key') || DEFAULT_KEY,
-  };
-}
-
-// ══════════════════════════════════════════
-// SUPABASE REST HELPERS
-// ══════════════════════════════════════════
-function sbFetch(path, opts = {}) {
-  const { url, key } = getCfg();
-  return fetch(`${url}/rest/v1/${path}`, {
+// ── SUPABASE ────────────────────────────────────
+function sbFetch(path, opts={}){
+  const {url,key}=getCfg();
+  return fetch(`${url}/rest/v1/${path}`,{
     ...opts,
-    headers: {
-      'apikey': key,
-      'Authorization': `Bearer ${key}`,
-      'Content-Type': 'application/json',
-      'Prefer': opts.prefer || '',
-      ...(opts.headers || {}),
-    },
+    headers:{ apikey:key, Authorization:`Bearer ${key}`, 'Content-Type':'application/json', Prefer:opts.prefer||'', ...(opts.headers||{}) }
   });
 }
+async function sbGet(path){ const r=await sbFetch(path); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+async function sbPost(path,body){ const r=await sbFetch(path,{method:'POST',prefer:'return=representation',body:JSON.stringify(body)}); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+async function sbPatch(path,body){ const r=await sbFetch(path,{method:'PATCH',prefer:'return=representation',body:JSON.stringify(body)}); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+async function sbUpsert(path,body){ const r=await sbFetch(path,{method:'POST',prefer:'return=representation,resolution=merge-duplicates',body:JSON.stringify(body)}); if(!r.ok) throw new Error(await r.text()); return r.json(); }
+async function sbDelete(path){ const r=await sbFetch(path,{method:'DELETE'}); if(!r.ok) throw new Error(await r.text()); }
 
-async function sbGet(path) {
-  const r = await sbFetch(path);
-  if (!r.ok) throw new Error(await r.text());
-  return r.json();
-}
-
-async function sbPost(path, body) {
-  const r = await sbFetch(path, {
-    method: 'POST',
-    prefer: 'return=representation',
-    body: JSON.stringify(body),
-  });
-  if (!r.ok) throw new Error(await r.text());
-  return r.json();
-}
-
-async function sbPatch(path, body) {
-  const r = await sbFetch(path, {
-    method: 'PATCH',
-    prefer: 'return=representation',
-    body: JSON.stringify(body),
-  });
-  if (!r.ok) throw new Error(await r.text());
-  return r.json();
-}
-
-async function sbDelete(path) {
-  const r = await sbFetch(path, { method: 'DELETE' });
-  if (!r.ok) throw new Error(await r.text());
-}
-
-// ══════════════════════════════════════════
-// CHECKLIST DATA
-// ══════════════════════════════════════════
-const CHECKLIST = [
-  { id:'content', icon:'✍️', title:'Copy & Content', items:[
-    { id:'c1', label:'All placeholder text removed', detail:'No Lorem Ipsum, TBD, [CLIENT NAME], or template copy' },
-    { id:'c2', label:'Headlines and body copy proofread', detail:'Spelling, grammar, punctuation checked' },
-    { id:'c3', label:'Client name and product names spelled correctly', detail:'Check every instance across all pages' },
-    { id:'c4', label:'All CTAs are correctly labelled', detail:'Button text makes sense in context' },
-    { id:'c5', label:'Meta title and description filled in', detail:'Every page has unique, accurate meta copy' },
-    { id:'c6', label:'Legal / compliance copy present', detail:'Privacy policy, cookie notice, disclaimers if required' },
+// ── DEFAULT TEMPLATE ────────────────────────────
+const DEFAULT_TEMPLATE = [
+  {id:'content',icon:'✍️',title:'Copy & Content',items:[
+    {id:'c1',label:'All placeholder text removed',detail:'No Lorem Ipsum, TBD, [CLIENT NAME], or template copy'},
+    {id:'c2',label:'Headlines and body copy proofread',detail:'Spelling, grammar, punctuation checked'},
+    {id:'c3',label:'Client name and product names spelled correctly',detail:'Check every instance across all pages'},
+    {id:'c4',label:'All CTAs are correctly labelled',detail:'Button text makes sense in context'},
+    {id:'c5',label:'Meta title and description filled in',detail:'Every page has unique, accurate meta copy'},
+    {id:'c6',label:'Legal / compliance copy present',detail:'Privacy policy, cookie notice, disclaimers if required'},
   ]},
-  { id:'links', icon:'🔗', title:'Links & Navigation', items:[
-    { id:'l1', label:'All navigation links work', detail:'Desktop and mobile nav tested end-to-end' },
-    { id:'l2', label:'No broken internal links', detail:'Click through every page link' },
-    { id:'l3', label:'External links open correctly', detail:'Check target (new tab where expected)' },
-    { id:'l4', label:'Footer links all work', detail:'Including social links and legal pages' },
-    { id:'l5', label:'Logo links to homepage', detail:'Standard expectation, easy to miss' },
-    { id:'l6', label:'404 page is styled', detail:'Custom 404 or sensible fallback in place' },
+  {id:'links',icon:'🔗',title:'Links & Navigation',items:[
+    {id:'l1',label:'All navigation links work',detail:'Desktop and mobile nav tested end-to-end'},
+    {id:'l2',label:'No broken internal links',detail:'Click through every page link'},
+    {id:'l3',label:'External links open correctly',detail:'Check target (new tab where expected)'},
+    {id:'l4',label:'Footer links all work',detail:'Including social links and legal pages'},
+    {id:'l5',label:'Logo links to homepage',detail:'Standard expectation, easy to miss'},
+    {id:'l6',label:'404 page is styled',detail:'Custom 404 or sensible fallback in place'},
   ]},
-  { id:'visual', icon:'👁️', title:'Visual & Brand', items:[
-    { id:'v1', label:'Brand colours match approved palette', detail:'No off-hex values slipping through' },
-    { id:'v2', label:'Typography matches design spec', detail:'Fonts, weights, sizes, line-heights' },
-    { id:'v3', label:'All images load correctly', detail:'No broken images, no placeholder images' },
-    { id:'v4', label:'Images are appropriately sized and sharp', detail:'Retina images for 2x displays where needed' },
-    { id:'v5', label:'Favicon is set', detail:'Browser tab icon is correct, not default' },
-    { id:'v6', label:'Logo appears correctly across all pages', detail:'Correct file, correct sizing' },
-    { id:'v7', label:'Spacing and alignment consistent', detail:'No rogue padding/margin from CMS or overrides' },
-    { id:'v8', label:'Animations play correctly', detail:'Scroll animations, Lottie, video — tested on reload' },
+  {id:'visual',icon:'👁️',title:'Visual & Brand',items:[
+    {id:'v1',label:'Brand colours match approved palette',detail:'No off-hex values slipping through'},
+    {id:'v2',label:'Typography matches design spec',detail:'Fonts, weights, sizes, line-heights'},
+    {id:'v3',label:'All images load correctly',detail:'No broken images, no placeholder images'},
+    {id:'v4',label:'Images are appropriately sized and sharp',detail:'Retina images for 2x displays where needed'},
+    {id:'v5',label:'Favicon is set',detail:'Browser tab icon is correct, not default'},
+    {id:'v6',label:'Logo appears correctly across all pages',detail:'Correct file, correct sizing'},
+    {id:'v7',label:'Spacing and alignment consistent',detail:'No rogue padding/margin from CMS or overrides'},
+    {id:'v8',label:'Animations play correctly',detail:'Scroll animations, Lottie, video — tested on reload'},
   ]},
-  { id:'responsive', icon:'📱', title:'Responsive & Cross-Browser', items:[
-    { id:'r1', label:'Tested on mobile (iOS Safari)', detail:'Most common edge-case browser' },
-    { id:'r2', label:'Tested on mobile (Android Chrome)', detail:'' },
-    { id:'r3', label:'Tested on desktop Chrome', detail:'' },
-    { id:'r4', label:'Tested on desktop Safari', detail:'Especially for CSS features and fonts' },
-    { id:'r5', label:'Tested on desktop Firefox', detail:'' },
-    { id:'r6', label:'No horizontal scroll on mobile', detail:'Check at 320px, 375px, 390px viewports' },
-    { id:'r7', label:'Tap targets large enough on mobile', detail:'Min 44×44px for interactive elements' },
-    { id:'r8', label:'Hamburger / mobile nav works', detail:'Opens, closes, all links accessible' },
+  {id:'responsive',icon:'📱',title:'Responsive & Cross-Browser',items:[
+    {id:'r1',label:'Tested on mobile (iOS Safari)',detail:'Most common edge-case browser'},
+    {id:'r2',label:'Tested on mobile (Android Chrome)',detail:''},
+    {id:'r3',label:'Tested on desktop Chrome',detail:''},
+    {id:'r4',label:'Tested on desktop Safari',detail:'Especially for CSS features and fonts'},
+    {id:'r5',label:'Tested on desktop Firefox',detail:''},
+    {id:'r6',label:'No horizontal scroll on mobile',detail:'Check at 320px, 375px, 390px viewports'},
+    {id:'r7',label:'Tap targets large enough on mobile',detail:'Min 44×44px for interactive elements'},
+    {id:'r8',label:'Hamburger / mobile nav works',detail:'Opens, closes, all links accessible'},
   ]},
-  { id:'forms', icon:'📋', title:'Forms & Interactions', items:[
-    { id:'f1', label:'All forms submit correctly', detail:'Test with valid and invalid data' },
-    { id:'f2', label:'Form validation messages appear', detail:'Required fields, format validation' },
-    { id:'f3', label:'Success states show after submission', detail:'Confirmation message or redirect works' },
-    { id:'f4', label:'Form submissions reach the right inbox', detail:'Send a test submission and confirm receipt' },
-    { id:'f5', label:'reCAPTCHA or spam protection active', detail:'If applicable' },
+  {id:'forms',icon:'📋',title:'Forms & Interactions',items:[
+    {id:'f1',label:'All forms submit correctly',detail:'Test with valid and invalid data'},
+    {id:'f2',label:'Form validation messages appear',detail:'Required fields, format validation'},
+    {id:'f3',label:'Success states show after submission',detail:'Confirmation message or redirect works'},
+    {id:'f4',label:'Form submissions reach the right inbox',detail:'Send a test submission and confirm receipt'},
+    {id:'f5',label:'reCAPTCHA or spam protection active',detail:'If applicable'},
   ]},
-  { id:'performance', icon:'⚡', title:'Performance & Technical', items:[
-    { id:'p1', label:'No console errors in DevTools', detail:'Open F12 → Console on all pages' },
-    { id:'p2', label:'Page load feels fast', detail:'Run Lighthouse or PageSpeed Insights' },
-    { id:'p3', label:'SSL certificate active (HTTPS)', detail:'Padlock shows in browser' },
-    { id:'p4', label:'Redirects working correctly', detail:'www → non-www or vice versa, old URLs if migrated' },
-    { id:'p5', label:'Analytics tracking confirmed', detail:'GA4, Mixpanel or similar firing correctly' },
-    { id:'p6', label:'Cookie consent banner working', detail:'If required for region/client' },
-    { id:'p7', label:'No staging/test domain references', detail:'Check OG tags, canonical tags, sitemaps' },
+  {id:'performance',icon:'⚡',title:'Performance & Technical',items:[
+    {id:'p1',label:'No console errors in DevTools',detail:'Open F12 → Console on all pages'},
+    {id:'p2',label:'Page load feels fast',detail:'Run Lighthouse or PageSpeed Insights'},
+    {id:'p3',label:'SSL certificate active (HTTPS)',detail:'Padlock shows in browser'},
+    {id:'p4',label:'Redirects working correctly',detail:'www → non-www or vice versa, old URLs if migrated'},
+    {id:'p5',label:'Analytics tracking confirmed',detail:'GA4, Mixpanel or similar firing correctly'},
+    {id:'p6',label:'Cookie consent banner working',detail:'If required for region/client'},
+    {id:'p7',label:'No staging/test domain references',detail:'Check OG tags, canonical tags, sitemaps'},
   ]},
-  { id:'accessibility', icon:'♿', title:'Accessibility Basics', items:[
-    { id:'a1', label:'Images have alt text', detail:'Descriptive alt for content images, empty for decorative' },
-    { id:'a2', label:'Colour contrast is sufficient', detail:'Body text WCAG AA: min 4.5:1 ratio' },
-    { id:'a3', label:'Keyboard navigation works', detail:'Tab through the page — focus states visible' },
-    { id:'a4', label:'Page has a logical heading structure', detail:'One H1, logical H2/H3 hierarchy' },
-    { id:'a5', label:'Animations respect prefers-reduced-motion', detail:'Or a pause control is available' },
+  {id:'accessibility',icon:'♿',title:'Accessibility Basics',items:[
+    {id:'a1',label:'Images have alt text',detail:'Descriptive alt for content images, empty for decorative'},
+    {id:'a2',label:'Colour contrast is sufficient',detail:'Body text WCAG AA: min 4.5:1 ratio'},
+    {id:'a3',label:'Keyboard navigation works',detail:'Tab through the page — focus states visible'},
+    {id:'a4',label:'Page has a logical heading structure',detail:'One H1, logical H2/H3 hierarchy'},
+    {id:'a5',label:'Animations respect prefers-reduced-motion',detail:'Or a pause control is available'},
   ]},
-  { id:'handover', icon:'📦', title:'Client Handover', items:[
-    { id:'h1', label:'CMS login details prepared', detail:'Or agreed handover method' },
-    { id:'h2', label:'Domain / DNS notes documented', detail:'Any custom config the client needs to know' },
-    { id:'h3', label:'Staging password removed', detail:"Client shouldn't hit a password wall" },
-    { id:'h4', label:'Browser tab title correct on all pages', detail:'Not "Home | Framer" or similar default' },
-    { id:'h5', label:'Social share image (OG image) set', detail:'Test with opengraph.xyz' },
+  {id:'handover',icon:'📦',title:'Client Handover',items:[
+    {id:'h1',label:'CMS login details prepared',detail:'Or agreed handover method'},
+    {id:'h2',label:'Domain / DNS notes documented',detail:'Any custom config the client needs to know'},
+    {id:'h3',label:'Staging password removed',detail:"Client shouldn't hit a password wall"},
+    {id:'h4',label:'Browser tab title correct on all pages',detail:'Not "Home | Framer" or similar default'},
+    {id:'h5',label:'Social share image (OG image) set',detail:'Test with opengraph.xyz'},
   ]},
 ];
 
-const TOTAL = CHECKLIST.reduce((a, s) => a + s.items.length, 0);
+// ── APP STATE ───────────────────────────────────
+let activeTemplate = JSON.parse(JSON.stringify(DEFAULT_TEMPLATE)); // live template
+let editingTemplate = [];   // copy being edited in settings
+let currentId = null;
+let currentTemplate = [];   // template snapshot on open checklist
+let currentMeta = {};
+let currentChecks = {};
+let saveTimer = null;
+let iconPickerTarget = null; // { catIndex }
 
-// ══════════════════════════════════════════
-// APP STATE
-// ══════════════════════════════════════════
-let currentId    = null;   // UUID of open checklist
-let currentMeta  = {};     // { name, url, checker }
-let currentChecks = {};    // { itemId: { checked, failed, na, note }, 'snote-X': '' }
-let saveTimer    = null;
-let allChecklists = [];
-
-// ══════════════════════════════════════════
-// PAGES
-// ══════════════════════════════════════════
-function goPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-  document.getElementById('page-' + name).classList.add('on');
-  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-  const nav = document.getElementById('nav-' + name);
-  if (nav) nav.classList.add('active');
-  if (name === 'dash') loadDash();
+// ── PAGES ───────────────────────────────────────
+function goPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+name).classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  const nav=document.getElementById('nav-'+name);
+  if(nav) nav.classList.add('active');
+  if(name==='dash') loadDash();
+  if(name==='settings') initSettingsPage();
+}
+function goPageDirect(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+name).classList.add('on');
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
 }
 
-// ══════════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════════
-async function loadDash() {
-  document.getElementById('grid').innerHTML = `
-    <div class="empty">
-      <div class="big-spin" style="margin:0 auto 14px;"></div>
-      <p>Loading from Supabase…</p>
-    </div>`;
-  document.getElementById('statsRow').innerHTML = '';
+// ── TEMPLATE LOADING ────────────────────────────
+async function loadTemplate(){
+  try {
+    const rows = await sbGet('templates?id=eq.default');
+    if(rows && rows.length && rows[0].sections && rows[0].sections.length){
+      activeTemplate = rows[0].sections;
+    } else {
+      activeTemplate = JSON.parse(JSON.stringify(DEFAULT_TEMPLATE));
+    }
+    setConn(true);
+  } catch(e){
+    activeTemplate = JSON.parse(JSON.stringify(DEFAULT_TEMPLATE));
+    // Don't show error — templates table might just not exist yet
+  }
+}
 
+async function saveTemplate(){
+  const btn = document.getElementById('saveTplBtn');
+  btn.disabled=true; btn.textContent='Saving…';
+  try {
+    // Read current state from DOM into editingTemplate
+    syncEditorToState();
+    await sbUpsert('templates', { id:'default', sections: editingTemplate, updated_at: new Date().toISOString() });
+    activeTemplate = JSON.parse(JSON.stringify(editingTemplate));
+    document.getElementById('tplStatus').textContent = `Template saved — ${new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}`;
+    toast('Template saved ✓','ok');
+  } catch(e){
+    toast('Save failed: '+e.message,'err');
+    document.getElementById('tplStatus').textContent = 'Error: '+e.message;
+  }
+  btn.disabled=false; btn.textContent='Save Template';
+}
+
+// ── DASHBOARD ───────────────────────────────────
+async function loadDash(){
+  document.getElementById('grid').innerHTML='<div class="empty"><div class="big-spin" style="margin:0 auto 14px"></div><p>Loading from Supabase…</p></div>';
+  document.getElementById('statsRow').innerHTML='';
   try {
     const rows = await sbGet('checklists?order=created_at.desc');
-    allChecklists = rows;
     renderDash(rows);
     setConn(true);
-  } catch(e) {
-    document.getElementById('grid').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">⚠️</div>
-        <h3>Could not connect</h3>
-        <p>${esc(e.message)}</p>
-        <p style="margin-top:8px;">Check your Supabase credentials in Settings, and make sure the <code>checklists</code> table exists.</p>
-      </div>`;
+  } catch(e){
+    document.getElementById('grid').innerHTML=`<div class="empty"><div class="empty-icon">⚠️</div><h3>Could not connect</h3><p>${esc(e.message)}</p></div>`;
     setConn(false);
   }
 }
 
-function renderDash(rows) {
-  // Stats
-  const done     = rows.filter(r => pct(r) === 100).length;
-  const hasFail  = rows.filter(r => countFailed(r.checks) > 0).length;
-  const inProg   = rows.filter(r => pct(r) > 0 && pct(r) < 100).length;
-  document.getElementById('statsRow').innerHTML = `
+function totalForRow(r){
+  const tpl = r.template || activeTemplate;
+  return tpl.reduce((a,s)=>a+(s.items||[]).length,0);
+}
+
+function renderDash(rows){
+  const done    = rows.filter(r=>rowPct(r)===100).length;
+  const hasFail = rows.filter(r=>countFailed(r.checks)>0).length;
+  const inProg  = rows.filter(r=>rowPct(r)>0&&rowPct(r)<100).length;
+  document.getElementById('statsRow').innerHTML=`
     <div class="stat"><div class="stat-n">${rows.length}</div><div class="stat-l">Total</div></div>
     <div class="stat"><div class="stat-n" style="color:var(--green)">${done}</div><div class="stat-l">Complete</div></div>
     <div class="stat"><div class="stat-n" style="color:var(--amber)">${inProg}</div><div class="stat-l">In Progress</div></div>
-    <div class="stat"><div class="stat-n" style="color:var(--red)">${hasFail}</div><div class="stat-l">Have Failures</div></div>
-  `;
-
-  if (!rows.length) {
-    document.getElementById('grid').innerHTML = `
-      <div class="empty">
-        <div class="empty-icon">📋</div>
-        <h3>No checklists yet</h3>
-        <p>Create your first QA checklist — it'll be saved to your shared Supabase database instantly.</p>
-        <button class="btn btn-accent" onclick="openNewModal()">＋ New Checklist</button>
-      </div>`;
+    <div class="stat"><div class="stat-n" style="color:var(--red)">${hasFail}</div><div class="stat-l">Have Failures</div></div>`;
+  if(!rows.length){
+    document.getElementById('grid').innerHTML=`<div class="empty"><div class="empty-icon">📋</div><h3>No checklists yet</h3><p>Create your first QA checklist — it'll be saved to your shared database instantly.</p><button class="btn btn-accent" onclick="openNewModal()">＋ New Checklist</button></div>`;
     return;
   }
-
-  document.getElementById('grid').innerHTML = rows.map(r => {
-    const p = pct(r);
-    const barClass = p === 100 ? 'bar-done' : p >= 70 ? 'bar-high' : p >= 30 ? 'bar-mid' : p > 0 ? 'bar-low' : 'bar-todo';
-    const pctColor = p === 100 ? 'var(--navy)' : p >= 70 ? 'var(--green)' : p >= 30 ? 'var(--amber)' : p > 0 ? 'var(--red)' : 'var(--muted)';
-    const passed = countPassed(r.checks);
-    const failed = countFailed(r.checks);
-    const na     = countNA(r.checks);
-    const date   = new Date(r.created_at).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'});
-    const updated = r.updated_at !== r.created_at
-      ? new Date(r.updated_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'})
-      : null;
-    return `
-      <div class="card" onclick="openChecklist('${r.id}')">
-        <div class="card-bar ${barClass}"></div>
-        <div class="card-body">
-          <div class="card-name">${esc(r.name)}</div>
-          <div class="card-url">${esc(r.url) || '<span style="opacity:0.4">No URL set</span>'}</div>
-          <div class="card-foot">
-            <div class="card-pct" style="color:${pctColor}">${p}%</div>
-            <div class="card-meta">
-              ${passed}/${TOTAL - na} passed<br>
-              ${updated ? `Updated ${updated}` : date}
-            </div>
-          </div>
-          <div class="chips">
-            ${failed > 0 ? `<span class="chip chip-red">✕ ${failed} failed</span>` : ''}
-            ${p === 100 ? `<span class="chip chip-green">✓ Complete</span>` : ''}
-            ${r.checker ? `<span class="chip chip-navy">${esc(r.checker)}</span>` : ''}
-          </div>
+  document.getElementById('grid').innerHTML=rows.map(r=>{
+    const p=rowPct(r);
+    const total=totalForRow(r);
+    const barClass=p===100?'bar-done':p>=70?'bar-high':p>=30?'bar-mid':p>0?'bar-low':'bar-todo';
+    const pctColor=p===100?'var(--navy)':p>=70?'var(--green)':p>=30?'var(--amber)':p>0?'var(--red)':'var(--muted)';
+    const passed=countPassed(r.checks); const failed=countFailed(r.checks); const na=countNA(r.checks);
+    const date=new Date(r.created_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    const updated=r.updated_at!==r.created_at?new Date(r.updated_at).toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):null;
+    return `<div class="card" onclick="openChecklist('${r.id}')">
+      <div class="card-bar ${barClass}"></div>
+      <div class="card-body">
+        <div class="card-name">${esc(r.name)}</div>
+        <div class="card-url">${esc(r.url)||'<span style="opacity:.4">No URL set</span>'}</div>
+        <div class="card-foot">
+          <div class="card-pct" style="color:${pctColor}">${p}%</div>
+          <div class="card-meta">${passed}/${total-na} passed<br>${updated?'Updated '+updated:date}</div>
+        </div>
+        <div class="chips">
+          ${failed>0?`<span class="chip chip-red">✕ ${failed} failed</span>`:''}
+          ${p===100?`<span class="chip chip-green">✓ Complete</span>`:''}
+          ${r.checker?`<span class="chip chip-navy">${esc(r.checker)}</span>`:''}
         </div>
       </div>
-    `;
+    </div>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════
-// HELPERS — counts & pct
-// ══════════════════════════════════════════
-function countPassed(c) { return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].checked).length; }
-function countFailed(c) { return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].failed).length; }
-function countNA(c)     { return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].na).length; }
-function pct(r) {
-  const c = r.checks || {};
-  const passed = countPassed(c);
-  const na     = countNA(c);
-  return Math.round((passed / Math.max(1, TOTAL - na)) * 100);
+// ── COUNTS & PCT ────────────────────────────────
+function countPassed(c){ return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].checked).length; }
+function countFailed(c){ return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].failed).length; }
+function countNA(c){     return Object.keys(c||{}).filter(k=>!k.startsWith('snote-')&&c[k].na).length; }
+function rowPct(r){
+  const tpl = r.template || activeTemplate;
+  const total = tpl.reduce((a,s)=>a+(s.items||[]).length,0);
+  const c=r.checks||{};
+  const passed=countPassed(c); const na=countNA(c);
+  return Math.round((passed/Math.max(1,total-na))*100);
 }
 
-// ══════════════════════════════════════════
-// NEW CHECKLIST
-// ══════════════════════════════════════════
-function openNewModal() {
-  document.getElementById('newOverlay').classList.add('on');
-  setTimeout(() => document.getElementById('nName').focus(), 80);
-}
-function closeNewModal() {
-  document.getElementById('newOverlay').classList.remove('on');
-}
+// ── NEW CHECKLIST ────────────────────────────────
+function openNewModal(){ document.getElementById('newOverlay').classList.add('on'); setTimeout(()=>document.getElementById('nName').focus(),80); }
+function closeNewModal(){ document.getElementById('newOverlay').classList.remove('on'); }
 
-async function createChecklist() {
-  const name    = document.getElementById('nName').value.trim();
-  const url     = document.getElementById('nUrl').value.trim();
-  const checker = document.getElementById('nChecker').value.trim();
-  if (!name) { toast('Enter a project name first', 'err'); return; }
-
-  const btn = document.getElementById('createBtn');
-  btn.disabled = true; btn.textContent = 'Creating…';
-
+async function createChecklist(){
+  const name=document.getElementById('nName').value.trim();
+  const url=document.getElementById('nUrl').value.trim();
+  const checker=document.getElementById('nChecker').value.trim();
+  if(!name){ toast('Enter a project name first','err'); return; }
+  const btn=document.getElementById('createBtn');
+  btn.disabled=true; btn.textContent='Creating…';
   try {
-    const rows = await sbPost('checklists', { name, url, checker, checks: {} });
-    const row  = Array.isArray(rows) ? rows[0] : rows;
+    // Snapshot current template into the checklist row
+    const rows=await sbPost('checklists',{ name, url, checker, checks:{}, template: activeTemplate });
+    const row=Array.isArray(rows)?rows[0]:rows;
     closeNewModal();
-    btn.disabled = false; btn.textContent = 'Create →';
-    ['nName','nUrl','nChecker'].forEach(id => document.getElementById(id).value = '');
-    // Open directly with fresh data — no reload needed
+    btn.disabled=false; btn.textContent='Create →';
+    ['nName','nUrl','nChecker'].forEach(id=>document.getElementById(id).value='');
     openChecklist(row.id, row);
-  } catch(e) {
-    btn.disabled = false; btn.textContent = 'Create →';
-    toast('Error: ' + e.message, 'err');
+  } catch(e){
+    btn.disabled=false; btn.textContent='Create →';
+    toast('Error: '+e.message,'err');
   }
 }
 
-// ══════════════════════════════════════════
-// CHECKLIST VIEW
-// ══════════════════════════════════════════
-async function openChecklist(id, rowData) {
+// ── CHECKLIST VIEW ───────────────────────────────
+async function openChecklist(id, rowData){
   showLoader('Loading checklist…');
-  currentId = id;
-
+  currentId=id;
   try {
-    let row = rowData;
-    if (!row) {
-      const rows = await sbGet(`checklists?id=eq.${id}`);
-      row = rows[0];
-      if (!row) throw new Error('Checklist not found.');
-    }
-
-    currentMeta   = { name: row.name, url: row.url, checker: row.checker };
-    currentChecks = row.checks || {};
-
-    document.getElementById('clName').textContent    = row.name;
-    document.getElementById('clUrl').textContent     = row.url || 'No URL set';
-    document.getElementById('clChecker').textContent = row.checker ? `By ${row.checker}` : '';
+    let row=rowData;
+    if(!row){ const rows=await sbGet(`checklists?id=eq.${id}`); row=rows[0]; if(!row) throw new Error('Not found.'); }
+    currentTemplate = row.template || activeTemplate;
+    currentMeta={name:row.name,url:row.url,checker:row.checker};
+    currentChecks=row.checks||{};
+    document.getElementById('clName').textContent=row.name;
+    document.getElementById('clUrl').textContent=row.url||'No URL set';
+    document.getElementById('clChecker').textContent=row.checker?`By ${row.checker}`:'';
     document.getElementById('deleteConfirm').classList.remove('on');
-
     renderChecklist();
     updateProgress();
     updateSummary();
     hideLoader();
     goPageDirect('cl');
-  } catch(e) {
+  } catch(e){
     hideLoader();
-    toast('Could not load: ' + e.message, 'err');
+    toast('Could not load: '+e.message,'err');
   }
 }
 
-function goPageDirect(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-  document.getElementById('page-' + name).classList.add('on');
-  document.querySelectorAll('.sb-item').forEach(i => i.classList.remove('active'));
-}
-
-function renderChecklist() {
-  document.getElementById('clBody').innerHTML = CHECKLIST.map((sec, si) => {
-    const sNote = currentChecks['snote-' + sec.id] || '';
-    return `
-      <div class="sec ${si===0?'open':''}" id="sec-${sec.id}">
-        <div class="sec-hd" onclick="toggleSec('${sec.id}')">
-          <span class="sec-icon">${sec.icon}</span>
-          <span class="sec-title">${sec.title}</span>
-          <span class="sec-cnt" id="scnt-${sec.id}"></span>
-          <span class="sec-chev">▼</span>
-        </div>
-        <div class="sec-bd">
-          ${sec.items.map(item => renderItem(item)).join('')}
-          <div class="sec-notes">
-            <label>Notes</label>
-            <input type="text" placeholder="Section-level notes…" value="${esc(sNote)}"
-              onchange="setSNote('${sec.id}', this.value)">
-          </div>
-        </div>
-      </div>`;
+function renderChecklist(){
+  document.getElementById('clBody').innerHTML=currentTemplate.map((sec,si)=>{
+    const sNote=currentChecks['snote-'+sec.id]||'';
+    return `<div class="sec ${si===0?'open':''}" id="sec-${sec.id}">
+      <div class="sec-hd" onclick="toggleSec('${sec.id}')">
+        <span class="sec-icon">${sec.icon||'📌'}</span>
+        <span class="sec-title">${esc(sec.title)}</span>
+        <span class="sec-cnt" id="scnt-${sec.id}"></span>
+        <span class="sec-chev">▼</span>
+      </div>
+      <div class="sec-bd">
+        ${(sec.items||[]).map(item=>renderItem(item)).join('')}
+        <div class="sec-notes"><label>Notes</label><input type="text" placeholder="Section-level notes…" value="${esc(sNote)}" onchange="setSNote('${sec.id}',this.value)"></div>
+      </div>
+    </div>`;
   }).join('');
   updateAllCounts();
 }
 
-function renderItem(item) {
-  const s = currentChecks[item.id] || {};
-  const chkCls = s.failed ? 'fail' : '';
-  const showNote = s.failed || (s.note !== undefined && s.note !== '');
-  return `
-    <div class="item" id="item-${item.id}">
-      <input type="checkbox" class="chk ${chkCls}" id="chk-${item.id}"
-        ${s.checked ? 'checked' : ''}
-        ${s.na ? 'disabled' : ''}
-        onchange="toggleCheck('${item.id}', this.checked)">
-      <div class="item-lbl">
-        <strong style="${s.na?'opacity:0.35;text-decoration:line-through;':''}">${item.label}</strong>
-        ${item.detail ? `<small>${item.detail}</small>` : ''}
-        ${s.note ? `<div class="item-note-preview">↳ ${esc(s.note)}</div>` : ''}
-      </div>
-      <div class="item-acts">
-        <button class="act ${s.failed?'on-fail':''}" onclick="toggleFail('${item.id}')">✕ Fail</button>
-        <button class="act ${s.na?'on-na':''}"     onclick="toggleNA('${item.id}')">N/A</button>
-        <button class="act"                          onclick="promptNote('${item.id}')">+ Note</button>
-      </div>
-    </div>
-    <div class="note-row" id="nr-${item.id}" style="${showNote?'':'display:none;'}">
-      <input type="text" placeholder="Describe the issue…" value="${esc(s.note||'')}"
-        oninput="setNote('${item.id}', this.value)">
-    </div>`;
-}
-
-function toggleSec(id) {
-  document.getElementById('sec-'+id).classList.toggle('open');
-}
-
-// State mutations
-function getS(id) { return currentChecks[id] || {}; }
-function setS(id, upd) {
-  currentChecks[id] = { ...getS(id), ...upd };
-  scheduleSave();
-  updateProgress();
-  updateSummary();
-  updateAllCounts();
-}
-
-function toggleCheck(id, checked) {
-  setS(id, { checked, failed: false });
-  refreshItem(id);
-}
-function toggleFail(id) {
-  const s = getS(id);
-  const now = !s.failed;
-  setS(id, { failed: now, checked: false, na: false });
-  refreshItem(id);
-  if (now) { showNoteRow(id); document.querySelector(`#nr-${id} input`)?.focus(); }
-}
-function toggleNA(id) {
-  const s = getS(id);
-  setS(id, { na: !s.na, checked: false, failed: false });
-  refreshItem(id);
-}
-function promptNote(id) {
-  if (!currentChecks[id]) currentChecks[id] = {};
-  if (currentChecks[id].note === undefined) currentChecks[id].note = '';
-  showNoteRow(id);
-  document.querySelector(`#nr-${id} input`)?.focus();
-}
-function setNote(id, val) { setS(id, { note: val }); }
-function setSNote(secId, val) {
-  currentChecks['snote-'+secId] = val;
-  scheduleSave();
-}
-function showNoteRow(id) {
-  const nr = document.getElementById('nr-'+id);
-  if (nr) nr.style.display = '';
-}
-
-function refreshItem(id) {
-  const sec  = CHECKLIST.find(s => s.items.some(i => i.id === id));
-  const item = sec?.items.find(i => i.id === id);
-  if (!item) return;
-  const el = document.getElementById('item-'+id);
-  const nr = document.getElementById('nr-'+id);
-  if (!el) return;
-
-  const s = currentChecks[id] || {};
-  const chkCls = s.failed ? 'fail' : '';
-  el.innerHTML = `
-    <input type="checkbox" class="chk ${chkCls}" id="chk-${id}"
-      ${s.checked?'checked':''} ${s.na?'disabled':''}
-      onchange="toggleCheck('${id}', this.checked)">
+function renderItem(item){
+  const s=currentChecks[item.id]||{};
+  const showNote=s.failed||(s.note!==undefined&&s.note!=='');
+  return `<div class="item" id="item-${item.id}">
+    <input type="checkbox" class="chk ${s.failed?'fail':''}" ${s.checked?'checked':''} ${s.na?'disabled':''} onchange="toggleCheck('${item.id}',this.checked)">
     <div class="item-lbl">
-      <strong style="${s.na?'opacity:0.35;text-decoration:line-through;':''}">${item.label}</strong>
-      ${item.detail ? `<small>${item.detail}</small>` : ''}
-      ${s.note ? `<div class="item-note-preview">↳ ${esc(s.note)}</div>` : ''}
+      <strong style="${s.na?'opacity:.35;text-decoration:line-through;':''}">${esc(item.label)}</strong>
+      ${item.detail?`<small>${esc(item.detail)}</small>`:''}
+      ${s.note?`<div class="item-note-preview">↳ ${esc(s.note)}</div>`:''}
+    </div>
+    <div class="item-acts">
+      <button class="act ${s.failed?'on-fail':''}" onclick="toggleFail('${item.id}')">✕ Fail</button>
+      <button class="act ${s.na?'on-na':''}" onclick="toggleNA('${item.id}')">N/A</button>
+      <button class="act" onclick="promptNote('${item.id}')">+ Note</button>
+    </div>
+  </div>
+  <div class="note-row" id="nr-${item.id}" style="${showNote?'':'display:none'}">
+    <input type="text" placeholder="Describe the issue…" value="${esc(s.note||'')}" oninput="setNote('${item.id}',this.value)">
+  </div>`;
+}
+
+function toggleSec(id){ document.getElementById('sec-'+id).classList.toggle('open'); }
+function getS(id){ return currentChecks[id]||{}; }
+function setS(id,upd){ currentChecks[id]={...getS(id),...upd}; scheduleSave(); updateProgress(); updateSummary(); updateAllCounts(); }
+function toggleCheck(id,checked){ setS(id,{checked,failed:false}); refreshItem(id); }
+function toggleFail(id){ const s=getS(id); const now=!s.failed; setS(id,{failed:now,checked:false,na:false}); refreshItem(id); if(now){showNoteRow(id); document.querySelector(`#nr-${id} input`)?.focus();} }
+function toggleNA(id){ const s=getS(id); setS(id,{na:!s.na,checked:false,failed:false}); refreshItem(id); }
+function promptNote(id){ if(!currentChecks[id]) currentChecks[id]={}; if(currentChecks[id].note===undefined) currentChecks[id].note=''; showNoteRow(id); document.querySelector(`#nr-${id} input`)?.focus(); }
+function setNote(id,val){ setS(id,{note:val}); }
+function setSNote(secId,val){ currentChecks['snote-'+secId]=val; scheduleSave(); }
+function showNoteRow(id){ const nr=document.getElementById('nr-'+id); if(nr) nr.style.display=''; }
+
+function refreshItem(id){
+  const sec=currentTemplate.find(s=>(s.items||[]).some(i=>i.id===id));
+  const item=sec?.items.find(i=>i.id===id);
+  if(!item) return;
+  const el=document.getElementById('item-'+id);
+  const nr=document.getElementById('nr-'+id);
+  if(!el) return;
+  const s=currentChecks[id]||{};
+  el.innerHTML=`
+    <input type="checkbox" class="chk ${s.failed?'fail':''}" ${s.checked?'checked':''} ${s.na?'disabled':''} onchange="toggleCheck('${id}',this.checked)">
+    <div class="item-lbl">
+      <strong style="${s.na?'opacity:.35;text-decoration:line-through;':''}">${esc(item.label)}</strong>
+      ${item.detail?`<small>${esc(item.detail)}</small>`:''}
+      ${s.note?`<div class="item-note-preview">↳ ${esc(s.note)}</div>`:''}
     </div>
     <div class="item-acts">
       <button class="act ${s.failed?'on-fail':''}" onclick="toggleFail('${id}')">✕ Fail</button>
-      <button class="act ${s.na?'on-na':''}"       onclick="toggleNA('${id}')">N/A</button>
-      <button class="act"                            onclick="promptNote('${id}')">+ Note</button>
+      <button class="act ${s.na?'on-na':''}" onclick="toggleNA('${id}')">N/A</button>
+      <button class="act" onclick="promptNote('${id}')">+ Note</button>
     </div>`;
-  if (nr) {
-    nr.style.display = (s.failed || (s.note !== undefined && s.note !== '')) ? '' : 'none';
-    const inp = nr.querySelector('input');
-    if (inp) inp.value = s.note || '';
-  }
+  if(nr){ nr.style.display=(s.failed||(s.note!==undefined&&s.note!==''))?'':'none'; const inp=nr.querySelector('input'); if(inp) inp.value=s.note||''; }
 }
 
-function updateProgress() {
-  const passed = countPassed(currentChecks);
-  const na     = countNA(currentChecks);
-  const p      = Math.round((passed / Math.max(1, TOTAL - na)) * 100);
-  document.getElementById('progFill').style.width = p + '%';
+function updateProgress(){
+  const total=currentTemplate.reduce((a,s)=>a+(s.items||[]).length,0);
+  const passed=countPassed(currentChecks); const na=countNA(currentChecks);
+  document.getElementById('progFill').style.width=Math.round((passed/Math.max(1,total-na))*100)+'%';
 }
-
-function updateSummary() {
-  const passed = countPassed(currentChecks);
-  const failed = countFailed(currentChecks);
-  const na     = countNA(currentChecks);
-  const p      = Math.round((passed / Math.max(1, TOTAL - na)) * 100);
-  document.getElementById('clSummary').innerHTML = `
+function updateSummary(){
+  const total=currentTemplate.reduce((a,s)=>a+(s.items||[]).length,0);
+  const passed=countPassed(currentChecks); const failed=countFailed(currentChecks); const na=countNA(currentChecks);
+  const p=Math.round((passed/Math.max(1,total-na))*100);
+  document.getElementById('clSummary').innerHTML=`
     <span class="chip chip-navy">${p}% complete</span>
     <span class="chip chip-green">✓ ${passed} passed</span>
     ${failed>0?`<span class="chip chip-red">✕ ${failed} failed</span>`:''}
-    ${na>0?`<span class="chip" style="background:var(--surface2);color:var(--muted);">${na} N/A</span>`:''}
-  `;
+    ${na>0?`<span class="chip" style="background:var(--surface2);color:var(--muted)">${na} N/A</span>`:''}`;
 }
-
-function updateAllCounts() {
-  CHECKLIST.forEach(sec => {
-    const done = sec.items.filter(i => {
-      const s = currentChecks[i.id] || {};
-      return s.checked || s.na;
-    }).length;
-    const el = document.getElementById('scnt-'+sec.id);
-    if (el) el.textContent = `${done}/${sec.items.length}`;
+function updateAllCounts(){
+  currentTemplate.forEach(sec=>{
+    const done=(sec.items||[]).filter(i=>{ const s=currentChecks[i.id]||{}; return s.checked||s.na; }).length;
+    const el=document.getElementById('scnt-'+sec.id);
+    if(el) el.textContent=`${done}/${(sec.items||[]).length}`;
   });
 }
 
-// ══════════════════════════════════════════
-// SAVE TO SUPABASE
-// ══════════════════════════════════════════
-function scheduleSave() {
-  clearTimeout(saveTimer);
-  setPill('saving', 'Saving…', true);
-  saveTimer = setTimeout(doSave, 1000);
-}
-
-async function doSave() {
+// ── SAVE ────────────────────────────────────────
+function scheduleSave(){ clearTimeout(saveTimer); setPill('saving','Saving…',true); saveTimer=setTimeout(doSave,1000); }
+async function doSave(){
   try {
-    await sbPatch(`checklists?id=eq.${currentId}`, {
-      checks: currentChecks,
-      updated_at: new Date().toISOString(),
+    await sbPatch(`checklists?id=eq.${currentId}`,{ checks:currentChecks, updated_at:new Date().toISOString() });
+    setPill('ok','Saved ✓',false); setTimeout(hidePill,2000);
+  } catch(e){ setPill('err','Save failed — '+e.message,false); }
+}
+function setPill(cls,txt,spin){ const p=document.getElementById('savePill'); p.className=`save-pill show ${cls}`; document.getElementById('saveTxt').textContent=txt; document.getElementById('saveSpin').style.display=spin?'':'none'; }
+function hidePill(){ document.getElementById('savePill').className='save-pill'; }
+
+// ── DELETE ───────────────────────────────────────
+function confirmDelete(){ document.getElementById('deleteConfirm').classList.add('on'); }
+function cancelDelete(){ document.getElementById('deleteConfirm').classList.remove('on'); }
+async function doDelete(){
+  try { await sbDelete(`checklists?id=eq.${currentId}`); toast('Deleted','inf'); goPage('dash'); }
+  catch(e){ toast('Delete failed: '+e.message,'err'); }
+}
+
+// ── REPORT ───────────────────────────────────────
+function copyReport(){
+  const total=currentTemplate.reduce((a,s)=>a+(s.items||[]).length,0);
+  const passed=countPassed(currentChecks); const failed=countFailed(currentChecks); const na=countNA(currentChecks);
+  const p=Math.round((passed/Math.max(1,total-na))*100);
+  const date=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  let out=`RS QA REPORT\n${'═'.repeat(48)}\nProject:    ${currentMeta.name||'—'}\nURL:        ${currentMeta.url||'—'}\nChecked by: ${currentMeta.checker||'—'}\nDate:       ${date}\nScore:      ${p}% — ${passed} passed, ${failed} failed, ${na} N/A\n${'─'.repeat(48)}\n\n`;
+  const fails=[],notes=[];
+  currentTemplate.forEach(sec=>{
+    (sec.items||[]).forEach(item=>{
+      const s=currentChecks[item.id]||{};
+      if(s.failed) fails.push(`  [FAIL] ${item.label}\n         Section: ${sec.title}${s.note?'\n         Note: '+s.note:''}`);
+      else if(s.note?.trim()) notes.push(`  [NOTE] ${item.label}\n         ${s.note}`);
     });
-    setPill('ok', 'Saved ✓', false);
-    setTimeout(hidePill, 2000);
-  } catch(e) {
-    setPill('err', 'Save failed — ' + e.message, false);
-  }
-}
-
-function setPill(cls, txt, spin) {
-  const pill = document.getElementById('savePill');
-  pill.className = `save-pill show ${cls}`;
-  document.getElementById('saveTxt').textContent = txt;
-  document.getElementById('saveSpin').style.display = spin ? '' : 'none';
-}
-function hidePill() {
-  document.getElementById('savePill').className = 'save-pill';
-}
-
-// ══════════════════════════════════════════
-// DELETE
-// ══════════════════════════════════════════
-function confirmDelete() {
-  document.getElementById('deleteConfirm').classList.add('on');
-}
-function cancelDelete() {
-  document.getElementById('deleteConfirm').classList.remove('on');
-}
-async function doDelete() {
-  try {
-    await sbDelete(`checklists?id=eq.${currentId}`);
-    toast('Checklist deleted', 'inf');
-    goPage('dash');
-  } catch(e) {
-    toast('Delete failed: ' + e.message, 'err');
-  }
-}
-
-// ══════════════════════════════════════════
-// EXPORT REPORT
-// ══════════════════════════════════════════
-function copyReport() {
-  const passed = countPassed(currentChecks);
-  const failed = countFailed(currentChecks);
-  const na     = countNA(currentChecks);
-  const p      = Math.round((passed / Math.max(1, TOTAL - na)) * 100);
-  const date   = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-
-  let out = `RS QA REPORT\n${'═'.repeat(48)}\n`;
-  out += `Project:    ${currentMeta.name || '—'}\n`;
-  out += `URL:        ${currentMeta.url  || '—'}\n`;
-  out += `Checked by: ${currentMeta.checker || '—'}\n`;
-  out += `Date:       ${date}\n`;
-  out += `Score:      ${p}% — ${passed} passed, ${failed} failed, ${na} N/A\n`;
-  out += `${'─'.repeat(48)}\n\n`;
-
-  const fails = [], notes = [];
-  CHECKLIST.forEach(sec => {
-    sec.items.forEach(item => {
-      const s = currentChecks[item.id] || {};
-      if (s.failed) fails.push(`  [FAIL] ${item.label}\n         Section: ${sec.title}${s.note?'\n         Note: '+s.note:''}`);
-      else if (s.note?.trim()) notes.push(`  [NOTE] ${item.label}\n         ${s.note}`);
-    });
-    const sn = currentChecks['snote-'+sec.id];
-    if (sn?.trim()) notes.push(`  [NOTE] ${sec.title} (section)\n         ${sn}`);
+    const sn=currentChecks['snote-'+sec.id];
+    if(sn?.trim()) notes.push(`  [NOTE] ${sec.title} (section)\n         ${sn}`);
   });
-
-  out += fails.length ? `FAILURES (${fails.length})\n${fails.join('\n')}\n\n` : `No failures recorded ✓\n\n`;
-  if (notes.length) out += `NOTES (${notes.length})\n${notes.join('\n')}\n`;
-
-  navigator.clipboard.writeText(out)
-    .then(()  => toast('Report copied to clipboard ✓', 'ok'))
-    .catch(()  => { prompt('Copy report:', out); });
+  out+=fails.length?`FAILURES (${fails.length})\n${fails.join('\n')}\n\n`:`No failures recorded ✓\n\n`;
+  if(notes.length) out+=`NOTES (${notes.length})\n${notes.join('\n')}\n`;
+  navigator.clipboard.writeText(out).then(()=>toast('Report copied ✓','ok')).catch(()=>prompt('Copy:',out));
 }
 
-// ══════════════════════════════════════════
-// SETTINGS
-// ══════════════════════════════════════════
-function saveSettings() {
-  const url = document.getElementById('setUrl').value.trim();
-  const key = document.getElementById('setKey').value.trim();
-  if (url) localStorage.setItem('rs_sb_url', url);
-  if (key) localStorage.setItem('rs_sb_key', key);
-  document.getElementById('setStatus').textContent = 'Saved — reloading dashboard…';
-  setTimeout(() => { goPage('dash'); document.getElementById('setStatus').textContent = ''; }, 800);
-}
-function clearSettings() {
-  if (!confirm('Reset to default credentials?')) return;
-  localStorage.removeItem('rs_sb_url');
-  localStorage.removeItem('rs_sb_key');
-  location.reload();
+// ── TEMPLATE EDITOR ──────────────────────────────
+function initSettingsPage(){
+  editingTemplate = JSON.parse(JSON.stringify(activeTemplate));
+  document.getElementById('setUrl').value=getCfg().url;
+  document.getElementById('setKey').value=getCfg().key;
+  renderTemplateEditor();
 }
 
-// ══════════════════════════════════════════
-// UI HELPERS
-// ══════════════════════════════════════════
-function esc(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
-}
-function toast(msg, type='inf') {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.className = `toast on ${type}`;
-  clearTimeout(el._t);
-  el._t = setTimeout(() => el.className = 'toast', 2800);
-}
-function showLoader(msg) {
-  document.getElementById('loaderTxt').textContent = msg || 'Loading…';
-  document.getElementById('loader').classList.add('on');
-}
-function hideLoader() {
-  document.getElementById('loader').classList.remove('on');
-}
-function setConn(ok) {
-  document.getElementById('connDot').className   = 'dot ' + (ok?'ok':'');
-  document.getElementById('connLabel').textContent = ok ? 'Connected' : 'Not connected';
+function renderTemplateEditor(){
+  const container=document.getElementById('tplEditor');
+  if(!editingTemplate.length){
+    container.innerHTML=`<p style="font-size:12px;color:var(--muted);text-align:center;padding:20px 0">No categories yet. Click + Category to add one.</p>`;
+    return;
+  }
+  container.innerHTML=editingTemplate.map((cat,ci)=>`
+    <div class="tpl-category" id="tplcat-${ci}">
+      <div class="tpl-cat-hd">
+        <span class="tpl-cat-icon" title="Change icon" onclick="openIconPicker(${ci})">${cat.icon||'📌'}</span>
+        <input class="tpl-cat-name" type="text" value="${esc(cat.title)}" placeholder="Category name…"
+          onchange="editingTemplate[${ci}].title=this.value">
+        <div class="tpl-cat-actions">
+          ${ci>0?`<button class="btn btn-ghost btn-sm" onclick="moveCat(${ci},-1)" title="Move up">↑</button>`:''}
+          ${ci<editingTemplate.length-1?`<button class="btn btn-ghost btn-sm" onclick="moveCat(${ci},1)" title="Move down">↓</button>`:''}
+          <button class="btn btn-red btn-sm" onclick="deleteCat(${ci})">✕</button>
+        </div>
+      </div>
+      <div class="tpl-items" id="tplitems-${ci}">
+        ${(cat.items||[]).map((item,ii)=>renderTplItem(ci,ii,item)).join('')}
+        <div class="tpl-add-item" onclick="addItem(${ci})">＋ Add item</div>
+      </div>
+    </div>`).join('');
 }
 
-// Modal backdrop close
-document.getElementById('newOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeNewModal();
-});
+function renderTplItem(ci,ii,item){
+  return `<div class="tpl-item-row" id="tplitem-${ci}-${ii}">
+    <span class="tpl-item-handle">⠿</span>
+    <input class="tpl-item-label" type="text" value="${esc(item.label)}" placeholder="Item label…"
+      onchange="editingTemplate[${ci}].items[${ii}].label=this.value">
+    <input class="tpl-item-detail" type="text" value="${esc(item.detail||'')}" placeholder="Helper text (optional)…"
+      onchange="editingTemplate[${ci}].items[${ii}].detail=this.value">
+    <div style="display:flex;gap:3px">
+      ${ii>0?`<button class="tpl-item-del" onclick="moveItem(${ci},${ii},-1)" title="Up">↑</button>`:'<span style="width:20px"></span>'}
+      ${ii<(editingTemplate[ci].items||[]).length-1?`<button class="tpl-item-del" onclick="moveItem(${ci},${ii},1)" title="Down">↓</button>`:'<span style="width:20px"></span>'}
+      <button class="tpl-item-del" onclick="deleteItem(${ci},${ii})" title="Delete">✕</button>
+    </div>
+  </div>`;
+}
 
-// Enter key shortcuts in modal
-document.getElementById('nName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('nUrl').focus(); });
-document.getElementById('nUrl').addEventListener('keydown',  e => { if(e.key==='Enter') document.getElementById('nChecker').focus(); });
-document.getElementById('nChecker').addEventListener('keydown', e => { if(e.key==='Enter') createChecklist(); });
+function syncEditorToState(){
+  // Pull current input values into editingTemplate (in case blur wasn't fired)
+  editingTemplate.forEach((cat,ci)=>{
+    const nameEl=document.querySelector(`#tplcat-${ci} .tpl-cat-name`);
+    if(nameEl) cat.title=nameEl.value;
+    (cat.items||[]).forEach((item,ii)=>{
+      const labelEl=document.querySelector(`#tplitem-${ci}-${ii} .tpl-item-label`);
+      const detailEl=document.querySelector(`#tplitem-${ci}-${ii} .tpl-item-detail`);
+      if(labelEl) item.label=labelEl.value;
+      if(detailEl) item.detail=detailEl.value;
+    });
+  });
+}
 
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
-// Pre-fill settings page with current values
-document.getElementById('setUrl').value = getCfg().url;
-document.getElementById('setKey').value = getCfg().key;
+function addCategory(){
+  syncEditorToState();
+  const newId='cat_'+Date.now();
+  editingTemplate.push({ id:newId, icon:'📌', title:'New Category', items:[] });
+  renderTemplateEditor();
+  // Focus new category name
+  setTimeout(()=>{
+    const inputs=document.querySelectorAll('.tpl-cat-name');
+    const last=inputs[inputs.length-1];
+    if(last){ last.focus(); last.select(); }
+  },60);
+}
 
-// Boot
-loadDash();
+function deleteCat(ci){
+  if(!confirm(`Delete "${editingTemplate[ci].title}" and all its items?`)) return;
+  syncEditorToState();
+  editingTemplate.splice(ci,1);
+  renderTemplateEditor();
+}
+
+function moveCat(ci,dir){
+  syncEditorToState();
+  const to=ci+dir;
+  if(to<0||to>=editingTemplate.length) return;
+  [editingTemplate[ci],editingTemplate[to]]=[editingTemplate[to],editingTemplate[ci]];
+  renderTemplateEditor();
+}
+
+function addItem(ci){
+  syncEditorToState();
+  if(!editingTemplate[ci].items) editingTemplate[ci].items=[];
+  editingTemplate[ci].items.push({ id:'item_'+Date.now(), label:'', detail:'' });
+  renderTemplateEditor();
+  // Focus new item
+  setTimeout(()=>{
+    const items=document.querySelectorAll(`#tplitems-${ci} .tpl-item-label`);
+    const last=items[items.length-1];
+    if(last) last.focus();
+  },60);
+}
+
+function deleteItem(ci,ii){
+  syncEditorToState();
+  editingTemplate[ci].items.splice(ii,1);
+  renderTemplateEditor();
+}
+
+function moveItem(ci,ii,dir){
+  syncEditorToState();
+  const items=editingTemplate[ci].items;
+  const to=ii+dir;
+  if(to<0||to>=items.length) return;
+  [items[ii],items[to]]=[items[to],items[ii]];
+  renderTemplateEditor();
+}
+
+// ── ICON PICKER ──────────────────────────────────
+const ICONS=['📋','✍️','🔗','👁️','📱','⚡','♿','📦','🎨','🧪','🔍','📐','💬','🔒','🌐','📊','🚀','⚙️','🧩','💡','📌','✅','🎯','📝','🔧','🖼️','📸','🎭','📣','🛡️'];
+function openIconPicker(ci){ iconPickerTarget=ci; document.getElementById('iconGrid').innerHTML=ICONS.map(ic=>`<button onclick="pickIcon('${ic}')" style="font-size:24px;background:none;border:1px solid var(--border);border-radius:6px;padding:8px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'">${ic}</button>`).join(''); document.getElementById('iconOverlay').classList.add('on'); }
+function closeIconPicker(){ document.getElementById('iconOverlay').classList.remove('on'); iconPickerTarget=null; }
+function pickIcon(icon){ if(iconPickerTarget===null) return; editingTemplate[iconPickerTarget].icon=icon; closeIconPicker(); renderTemplateEditor(); }
+
+// ── SETTINGS ────────────────────────────────────
+function saveSettings(){
+  const url=document.getElementById('setUrl').value.trim();
+  const key=document.getElementById('setKey').value.trim();
+  if(url) localStorage.setItem('rs_sb_url',url);
+  if(key) localStorage.setItem('rs_sb_key',key);
+  document.getElementById('setStatus').textContent='Saved — reloading…';
+  setTimeout(()=>{ goPage('dash'); document.getElementById('setStatus').textContent=''; },800);
+}
+function clearSettings(){ if(!confirm('Reset to default credentials?')) return; localStorage.removeItem('rs_sb_url'); localStorage.removeItem('rs_sb_key'); location.reload(); }
+function copySQL(){
+  navigator.clipboard.writeText(`create table if not exists templates (\n  id text primary key default 'default',\n  sections jsonb not null default '[]'::jsonb,\n  updated_at timestamptz default now()\n);`).then(()=>toast('SQL copied ✓','ok'));
+}
+
+// ── UI HELPERS ───────────────────────────────────
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+function toast(msg,type='inf'){ const el=document.getElementById('toast'); el.textContent=msg; el.className=`toast on ${type}`; clearTimeout(el._t); el._t=setTimeout(()=>el.className='toast',2800); }
+function showLoader(msg){ document.getElementById('loaderTxt').textContent=msg||'Loading…'; document.getElementById('loader').classList.add('on'); }
+function hideLoader(){ document.getElementById('loader').classList.remove('on'); }
+function setConn(ok){ document.getElementById('connDot').className='dot '+(ok?'ok':''); document.getElementById('connLabel').textContent=ok?'Connected':'Not connected'; }
+
+// Modal close on backdrop
+document.getElementById('newOverlay').addEventListener('click',function(e){ if(e.target===this) closeNewModal(); });
+document.getElementById('iconOverlay').addEventListener('click',function(e){ if(e.target===this) closeIconPicker(); });
+
+// Enter shortcuts
+document.getElementById('nName').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('nUrl').focus(); });
+document.getElementById('nUrl').addEventListener('keydown',e=>{ if(e.key==='Enter') document.getElementById('nChecker').focus(); });
+document.getElementById('nChecker').addEventListener('keydown',e=>{ if(e.key==='Enter') createChecklist(); });
+
+// ── BOOT ────────────────────────────────────────
+async function boot(){
+  await loadTemplate();
+  loadDash();
+}
+boot();
 </script>
 </body>
 </html>
